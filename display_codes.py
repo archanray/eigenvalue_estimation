@@ -13,9 +13,10 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
     estimate_min_eig_vec = np.array(sample_eigenvalues_scaled)
     estimate_std = np.array(sample_eigenvalues_scaled_std)
 
+    plt.gcf().clear()
     plt.plot(x_axis, true_min_eig_vec, label="True", alpha=0.7)
-    plt.plot(x_axis, estimate_min_eig_vec, label="Scaled estimate", alpha=0.7)
-    plt.fill_between(x_axis, estimate_min_eig_vec-estimate_std, estimate_min_eig_vec+estimate_std, alpha=0.3)
+    plt.plot(x_axis, estimate_min_eig_vec, label="Scaled estimate", alpha=0.7, color="#FC5A50")
+    plt.fill_between(x_axis, estimate_min_eig_vec-estimate_std, estimate_min_eig_vec+estimate_std, alpha=0.3, color="#FC5A50")
     plt.xlabel("Proportion of dataset chosen as landmark samples")
     plt.ylabel("Eigenvalue estimates")
     plt.legend(loc="upper right")
@@ -31,8 +32,9 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
 def display_precomputed_error(dataset_name, similarity_measure, error, error_std, dataset_size, \
                               search_rank, max_samples):
     x_axis = np.array(list(range(10, max_samples, 10))) / dataset_size
-    plt.plot(x_axis, error, label="log of squared error", alpha=0.7)
-    plt.fill_between(x_axis, error-error_std, error+error_std, alpha=0.3)
+    plt.gcf().clear()
+    plt.plot(x_axis, error, label="log of squared error", alpha=0.7, color="#FC5A50")
+    plt.fill_between(x_axis, error-error_std, error+error_std, alpha=0.3, color="#FC5A50")
     plt.xlabel("Proportion of dataset chosen as landmark samples")
     plt.ylabel("Error of eigenvalue estimates")
     plt.legend(loc="upper right")
