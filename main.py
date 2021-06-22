@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import random
 from tqdm import tqdm
 from display_codes import display, display_precomputed_error
@@ -18,7 +17,7 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
     all_eig_val_estimates = np.real(np.linalg.eigvals(subsample_matrix))
     all_eig_val_estimates.sort()
   
-    min_eig = all_eig_val_estimates[rankcheck]
+    min_eig = np.array(all_eig_val_estimates)[rankcheck]
 
     if scale == False:
         return min_eig
@@ -26,17 +25,26 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
         return n*min_eig/float(s)
 
 ############################################# GRAB THE MATRICES #################################
+xy, dataset_size = get_data("kong")
 true_mat_sigmoid = sigmoid(xy, xy)
 true_mat_tps = tps(xy, xy)
 true_sigmoid_spectrum = np.real(np.linalg.eigvals(true_mat_sigmoid))
 true_tps_spectrum = np.real(np.linalg.eigvals(true_mat_tps))
+print("loaded dataset")
 #################################################################################################
 
 ################################### COMPUTE ERRORS AND EIGS #####################################
+# parameters
 trials = 50
 similarity_measure = "sigmoid"
-search_rank = 1
+search_rank = [0,1,2,3,-1,-2,-3,-4]
+max_samples = 100
+
+sample_eigenvalues_scaled = []
+sample_eigenvalues_scaled_std = []
 tracked_errors = []
+tracked_errors_std = []
+
 
 if similarity_measure == "sigmoid":
     similarity = sigmoid
@@ -48,22 +56,40 @@ if similarity_measure == "tps":
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
 
-sample_eigenvalues_scaled = []
-for i in tqdm(range(10, 1000, 10)):
-    trials_vals = 0
-    error_total_round = 0
+for i in tqdm(range(10, max_samples, 10)):
+    eig_vals = []
+    error_vals = []
     for j in range(trials):
+        # get eigenvalue
         min_eig_single_round = sample_eig(xy, i, similarity, True, \
                                       rankcheck=search_rank)
-        error_total_round += np.log((min_eig_single_round - chosen_eig)**2)
-        trials_vals += min_eig_single_round
+        # get error this round
+        error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
+        # add to the local list
+        eig_vals.append(min_eig_single_round)
+        error_vals.append(error_single_round)
 
-    avg_min_eig = trials_vals / trials
-    avg_error = error_total_round / trials
-    sample_eigenvalues_scaled.append(avg_min_eig)
-    tracked_errors.append(avg_error)
+    # compute statistics from the local lists
+    mean_min_eig = np.mean(eig_vals, 0)
+    std_min_eig = np.std(eig_vals, 0)
+    mean_error = np.mean(eig_vals, 0)
+    std_error = np.std(eig_vals, 0)
+
+    # add statistics to the global list
+    sample_eigenvalues_scaled.append(mean_min_eig)
+    sample_eigenvalues_scaled_std.append(std_min_eig)
+    tracked_errors.append(mean_error)
+    tracked_errors_std.append(std_error)
+
+# convert to arrays
+sample_eigenvalues_scaled = np.array(sample_eigenvalues_scaled)
+sample_eigenvalues_scaled_std = np.array(sample_eigenvalues_scaled_std)
+tracked_errors = np.array(tracked_errors)
+tracked_errors_std = np.array(tracked_errors_std)
 #################################################################################################
 
-
-display("sigmoid", true_sigmoid_spectrum, dataset_size, search_rank, sample_eigenvalues_scaled)
-display_precomputed_error("sigmoid", tracked_errors, dataset_size, search_rank, sample_eigenvalues_scaled)
+for i in range(len(search_rank)):
+    display("kong", "sigmoid", true_sigmoid_spectrum, dataset_size, search_rank[i], \
+        sample_eigenvalues_scaled[:,i], sample_eigenvalues_scaled_std[:,i], max_samples)
+    display_precomputed_error("kong", "sigmoid", tracked_errors[:,i], tracked_errors_std[:,i], \
+        dataset_size, search_rank[i], max_samples)

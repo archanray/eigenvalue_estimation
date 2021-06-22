@@ -1,5 +1,6 @@
 import skimage.io
 from skimage import feature
+import numpy as np
 
 def get_data(name):
     if name == "kong":

@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.metrics import pairwise_distances as euclid
 
 def sigmoid(data1, data2, sigma=1):
     """
