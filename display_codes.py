@@ -20,7 +20,7 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
     plt.ylabel("Eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+str(search_rank)+"th eigenvalue")
-    filename = "./figures/dataset_name/eigenvalues/"
+    filename = "./figures/"+dataset_name+"/eigenvalues/"
     if not os.path.isdir(filename):
         os.makedirs(filename)
     filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"
@@ -37,7 +37,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, error_std
     plt.ylabel("Error of eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+str(search_rank)+"th eigenvalue")
-    filename = "./figures/dataset_name/errors/"
+    filename = "./figures/"+dataset_name+"/errors/"
     if not os.path.isdir(filename):
         os.makedirs(filename)
     filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"
