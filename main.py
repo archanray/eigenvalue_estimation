@@ -37,7 +37,7 @@ print("loaded dataset")
 # parameters
 trials = 50
 similarity_measure = "sigmoid"
-search_rank = [0,1,2,3,-1,-2,-3,-4]
+search_rank = [0,-1]
 max_samples = 100
 
 sample_eigenvalues_scaled = []
