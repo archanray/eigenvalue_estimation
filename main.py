@@ -28,10 +28,12 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 100
-similarity_measure = "tps"
+similarity_measure = "sigmoid"
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_samples = 1000
 dataset_name = "kong"
+# uncomment for run saved instance
+# dataset_size = 5000
 #################################################################################################
 
 ############################################# GRAB THE MATRICES #################################
@@ -44,6 +46,7 @@ if similarity_measure == "tps":
 true_mat = similarity(xy, xy)
 true_spectrum = np.real(np.linalg.eigvals(true_mat))
 print("loaded dataset")
+print("||A||_infty:", np.max(true_mat))
 #################################################################################################
 
 ################################### COMPUTE ERRORS AND EIGS #####################################
@@ -51,7 +54,6 @@ sample_eigenvalues_scaled = []
 sample_eigenvalues_scaled_std = []
 tracked_errors = []
 tracked_errors_std = []
-
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
 
@@ -90,7 +92,13 @@ with open("pickle_files/"+dataset_name+"_"+similarity_measure+".pkl", "wb") as p
     pickle.dump([sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
                   tracked_errors, tracked_errors_std], pickle_file)
 
-#################################################################################################
+# # uncomment to load from pickle file only
+# with open("pickle_files/"+dataset_name+"_"+similarity_measure+".pkl", "rb") as pickle_file:
+#     A = pickle.load (pickle_file)
+# [sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
+#                   tracked_errors, tracked_errors_std] = A
+
+################################################################################################
 
 for i in range(len(search_rank)):
     display(dataset_name, similarity_measure, true_spectrum, dataset_size, search_rank[i], \
