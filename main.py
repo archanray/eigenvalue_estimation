@@ -28,7 +28,7 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 100
-similarity_measure = "sigmoid"
+similarity_measure = "tps"
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_samples = 1000
 dataset_name = "kong"
@@ -65,9 +65,9 @@ for i in tqdm(range(10, max_samples, 10)):
         min_eig_single_round = sample_eig(xy, i, similarity, True, \
                                       rankcheck=search_rank)
         # get error this round
-        error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
-        # uncomment following two lines for relative error
-        error_single_round = error_single_round / (min_eig_single_round + 1e-16)
+        # error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
+        # uncomment following line for relative error
+        error_single_round = np.log((min_eig_single_round - chosen_eig)**2 / (chosen_eig**2))
         # add to the local list
         eig_vals.append(min_eig_single_round)
         error_vals.append(error_single_round)
