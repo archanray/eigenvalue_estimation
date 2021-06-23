@@ -33,10 +33,10 @@ def display_precomputed_error(dataset_name, similarity_measure, error, error_std
     x_axis = np.array(list(range(10, max_samples, 10))) / dataset_size
     x_axis = np.log(x_axis)
     plt.gcf().clear()
-    plt.plot(x_axis, error, label="log of squared error", alpha=1.0, color="#069AF3")
+    plt.plot(x_axis, error, label="log of relative squared error", alpha=1.0, color="#069AF3")
     plt.fill_between(x_axis, error-error_std, error+error_std, alpha=0.2, color="#069AF3")
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
-    plt.ylabel("Log of squared error of eigenvalue estimates")
+    plt.ylabel("Log of relative squared error of eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+str(search_rank)+"th eigenvalue")
     filename = "./figures/"+dataset_name+"/errors/"

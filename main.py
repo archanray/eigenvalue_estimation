@@ -66,9 +66,12 @@ for i in tqdm(range(10, max_samples, 10)):
                                       rankcheck=search_rank)
         # get error this round
         error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
+        # uncomment following two lines for relative error
+        error_single_round = error_single_round / (min_eig_single_round + 1e-16)
         # add to the local list
         eig_vals.append(min_eig_single_round)
         error_vals.append(error_single_round)
+        
 
     # compute statistics from the local lists
     mean_min_eig = np.mean(eig_vals, 0)
