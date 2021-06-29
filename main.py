@@ -67,7 +67,7 @@ for i in tqdm(range(10, max_samples, 10)):
         # get error this round
         # error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
         # uncomment following line for relative error
-        error_single_round = np.log((min_eig_single_round - chosen_eig)**2 / (chosen_eig**2))
+        error_single_round = np.log(np.abs(min_eig_single_round - chosen_eig) / np.abs(chosen_eig))
         # add to the local list
         eig_vals.append(min_eig_single_round)
         error_vals.append(error_single_round)
