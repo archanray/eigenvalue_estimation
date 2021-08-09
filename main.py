@@ -25,25 +25,48 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
     else:
         return n*min_eig/float(s)
 
+def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
+    """
+    input: opriginal matrix
+    output: sample eigenvalue
+    """
+    n = len(data_matrix)
+    list_of_available_indices = range(n)
+    sample_indices = np.sort(random.sample(list_of_available_indices, s))
+    subsample_matrix = data_matrix[sample_indices][:, sample_indices]
+    all_eig_val_estimates = np.real(np.linalg.eigvals(subsample_matrix))
+    all_eig_val_estimates.sort()
+
+    min_eig = np.array(all_eig_val_estimates)[rankcheck]
+    if scale == False:
+        return min_eig
+    else:
+        return n*min_eig/float(s)
+
 ###########################################PARAMETERS############################################
 # parameters
 trials = 100
-similarity_measure = "tps"
+similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_samples = 1000
-dataset_name = "kong"
+dataset_name = "random_sparse" #"binary", "kong"
 # uncomment for run saved instance
 # dataset_size = 5000
 #################################################################################################
 
 ############################################# GRAB THE MATRICES #################################
-xy, dataset_size = get_data(dataset_name)
-if similarity_measure == "sigmoid":
-    similarity = sigmoid
-if similarity_measure == "tps":
-    similarity = tps
+if dataset_name == "kong":
+    xy, dataset_size = get_data(dataset_name)
+    if similarity_measure == "sigmoid":
+        similarity = sigmoid
+    if similarity_measure == "tps":
+        similarity = tps
+    true_mat = similarity(xy, xy)
 
-true_mat = similarity(xy, xy)
+if dataset_name == "binary" or dataset_name == "random_sparse":
+    true_mat, dataset_size = get_data(dataset_name)
+    print(true_mat.shape)
+
 true_spectrum = np.real(np.linalg.eigvals(true_mat))
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
@@ -62,8 +85,12 @@ for i in tqdm(range(10, max_samples, 10)):
     error_vals = []
     for j in range(trials):
         # get eigenvalue
-        min_eig_single_round = sample_eig(xy, i, similarity, True, \
+        if dataset_name == "kong":
+            min_eig_single_round = sample_eig(xy, i, similarity, True, \
                                       rankcheck=search_rank)
+        if dataset_name == "binary" or dataset_name == "random_sparse":
+            min_eig_single_round = sample_eig_default(true_mat, i, True, \
+                                                rankcheck=search_rank)
         # get error this round
         # error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
         # uncomment following line for relative error

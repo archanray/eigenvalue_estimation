@@ -19,3 +19,29 @@ def get_data(name):
         xy[:, 1] = xy[:,1] / np.max(xy[:,1])
 
         return xy, dataset_size
+
+    if name == "binary":
+        """
+        mimics lower bound code
+        """
+        dataset_size = 5000
+        c = 0.50
+        A = np.zeros((dataset_size, dataset_size))
+        ind = np.random.choice(range(dataset_size), size=int(dataset_size*c), replace=False)
+        A[ind, ind] = -1
+
+        return A, dataset_size
+
+    if name == "random_sparse":
+        """
+        mimics test.m code
+        """
+        dataset_size = 5000
+        A = np.random.random((dataset_size, dataset_size))
+        A = A>0.99
+        A = A.astype(int)
+        A = np.triu(A) + np.triu(A).T
+
+        return A, dataset_size
+
+
