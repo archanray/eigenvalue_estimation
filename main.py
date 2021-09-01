@@ -46,10 +46,10 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 100
-similarity_measure = "tps" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
+similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_samples = 1000
-dataset_name = "kong" #"binary", "kong"
+dataset_name = "asymmetric" #"binary", "kong", "asymmetric"
 # uncomment for run saved instance
 # dataset_size = 5000
 #################################################################################################
