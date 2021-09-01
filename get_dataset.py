@@ -53,14 +53,22 @@ def get_data(name):
 
         return A, dataset_size
 
-    if name == "roadNetCA":
+    if name == "arxiv" or name == "facebook":
         """
-        dataset road-Net-CA
+        dataset arxiv: https://snap.stanford.edu/data/ca-CondMat.html
+        dataset facebook: https://snap.stanford.edu/data/ego-Facebook.html
         """
-        filename = "data/roadNet-CA.txt"
-        f = open(filename, "r")
-        all_lines = f.readlines()
-        f.close()
+        if name == "arxiv":
+            data_file = "./data/CA-CondMat.txt"
+        if name == "facebook":
+            data_file = "./data/facebook_combined.txt"    
+        import networkx as nx
+        g = nx.read_edgelist(data_file,create_using=nx.DiGraph(), nodetype = int)
+        A = nx.adjacency_matrix(g)
+        A = A.todense()
+        if name == "facebook":
+            A = A+A.T # symmetrizing as the original dataset is directed
 
-
-        return A
+        dataset_size = len(A)
+        
+        return A, dataset_size
