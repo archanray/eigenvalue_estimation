@@ -53,7 +53,7 @@ def get_data(name):
 
         return A, dataset_size
 
-    if name == "arxiv" or name == "facebook":
+    if name == "arxiv" or name == "facebook" or name == "erdos":
         """
         dataset arxiv: https://snap.stanford.edu/data/ca-CondMat.html
         dataset facebook: https://snap.stanford.edu/data/ego-Facebook.html
@@ -63,7 +63,11 @@ def get_data(name):
         if name == "facebook":
             data_file = "./data/facebook_combined.txt"    
         import networkx as nx
-        g = nx.read_edgelist(data_file,create_using=nx.DiGraph(), nodetype = int)
+        if name == "erdos":
+            from networkx.generators.random_graphs import erdos_renyi_graph
+            g = erdos_renyi_graph(5000, p=0.7)
+        else:
+            g = nx.read_edgelist(data_file,create_using=nx.DiGraph(), nodetype = int)
         A = nx.adjacency_matrix(g)
         A = A.todense()
         if name == "facebook":
