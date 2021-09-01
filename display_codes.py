@@ -2,6 +2,30 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+
+def convert_rank_to_order(search_rank):
+    """
+    convert numbers to names (preordained and not ordinal replacements)
+    """
+    if search_rank == 0:
+        rank_name = "smallest"
+    if search_rank == 1:
+        rank_name = "second smallest"
+    if search_rank == 2:
+        rank_name = "third smallest"
+    if search_rank == 3:
+        rank_name = "fourth smallest"
+    if search_rank == -1:
+        rank_name = "largest"
+    if search_rank == -2:
+        rank_name = "second largest"
+    if search_rank == -3:
+        rank_name = "third largest"
+    if search_rank == -4:
+        rank_name = "fourth largest"
+
+    return rank_name
+
 def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search_rank, \
             sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, max_samples):
     true_min_eig = true_eigvals[search_rank]
@@ -19,7 +43,8 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
     plt.xlabel("Proportion of dataset chosen as landmark samples")
     plt.ylabel("Eigenvalue estimates")
     plt.legend(loc="upper right")
-    plt.title(similarity_measure+": "+str(search_rank)+"th eigenvalue")
+    
+    plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     filename = "./figures/"+dataset_name+"/eigenvalues/"
     if not os.path.isdir(filename):
         os.makedirs(filename)
@@ -38,7 +63,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, error_std
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
     plt.ylabel("Log of relative absolute error of eigenvalue estimates")
     plt.legend(loc="upper right")
-    plt.title(similarity_measure+": "+str(search_rank)+"th eigenvalue")
+    plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     filename = "./figures/"+dataset_name+"/errors/"
     if not os.path.isdir(filename):
         os.makedirs(filename)

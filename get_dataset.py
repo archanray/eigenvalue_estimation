@@ -20,6 +20,15 @@ def get_data(name):
 
         return xy, dataset_size
 
+    if name == "asymmetric":
+        """
+        experiments with asymmetrics 
+        """
+        dataset_size = 5000
+        xy = np.random.random((dataset_size, dataset_size))
+
+        return xy, dataset_size
+
     if name == "binary":
         """
         mimics lower bound code
@@ -44,4 +53,14 @@ def get_data(name):
 
         return A, dataset_size
 
+    if name == "roadNetCA":
+        """
+        dataset road-Net-CA
+        """
+        filename = "data/roadNet-CA.txt"
+        f = open(filename, "r")
+        all_lines = f.readlines()
+        f.close()
 
+
+        return A

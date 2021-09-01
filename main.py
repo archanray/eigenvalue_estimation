@@ -46,10 +46,10 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 100
-similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
+similarity_measure = "tps" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_samples = 1000
-dataset_name = "random_sparse" #"binary", "kong"
+dataset_name = "kong" #"binary", "kong"
 # uncomment for run saved instance
 # dataset_size = 5000
 #################################################################################################
@@ -63,7 +63,7 @@ if dataset_name == "kong":
         similarity = tps
     true_mat = similarity(xy, xy)
 
-if dataset_name == "binary" or dataset_name == "random_sparse":
+if dataset_name == "binary" or dataset_name == "random_sparse" or dataset_name == "asymmetric":
     true_mat, dataset_size = get_data(dataset_name)
     print(true_mat.shape)
 
@@ -88,7 +88,7 @@ for i in tqdm(range(10, max_samples, 10)):
         if dataset_name == "kong":
             min_eig_single_round = sample_eig(xy, i, similarity, True, \
                                       rankcheck=search_rank)
-        if dataset_name == "binary" or dataset_name == "random_sparse":
+        if dataset_name == "binary" or dataset_name == "random_sparse" or dataset_name == "asymmetric":
             min_eig_single_round = sample_eig_default(true_mat, i, True, \
                                                 rankcheck=search_rank)
         # get error this round
