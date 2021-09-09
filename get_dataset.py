@@ -53,6 +53,17 @@ def get_data(name):
 
         return A, dataset_size
 
+    if name == "block":
+        """
+        uses a matrix with n/2 x n/2 block of all 1s and rest zeros
+        """
+        dataset_size = 5000
+        A = np.zeros((dataset_size, dataset_size))
+        B = np.ones((int(dataset_size/2), int(dataset_size/2)))
+        A[0:len(B), 0:len(B)] = B
+
+        return A, dataset_size
+
     if name == "arxiv" or name == "facebook" or name == "erdos":
         """
         dataset arxiv: https://snap.stanford.edu/data/ca-CondMat.html

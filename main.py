@@ -53,7 +53,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 trials = 100
 similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "erdos" #"binary", "kong", "asymmetric", "facebook", "arxiv"
+dataset_name = "block" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
 if dataset_name == "arxiv":
     max_samples = 5000
 else:
@@ -88,6 +88,7 @@ tracked_errors_std = []
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
 
+# comment out if you dont want to rerun and use only pickles
 for i in tqdm(range(10, max_samples, 10)):
     eig_vals = []
     error_vals = []
@@ -127,15 +128,28 @@ sample_eigenvalues_scaled_std = np.array(sample_eigenvalues_scaled_std)
 tracked_errors = np.array(tracked_errors)
 tracked_errors_std = np.array(tracked_errors_std)
 
+# comment out if you dont want to rerun and use only pickles
 with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl", "wb") as pickle_file:
     pickle.dump([sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
                   tracked_errors, tracked_errors_std], pickle_file)
 
-# # uncomment to load from pickle file only
-# with open("pickle_files/"+dataset_name+"_"+similarity_measure+".pkl", "rb") as pickle_file:
+# uncomment to load from pickle file only
+# with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl", "rb") as pickle_file:
 #     A = pickle.load (pickle_file)
 # [sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
 #                   tracked_errors, tracked_errors_std] = A
+
+# # uncomment to load eigvalues from saved file
+# f = open("figures/"+dataset_name+"/eigvals.txt", "r")
+# all_lines = f.readlines()
+# f.close()
+# all_lines = [x.strip("\r\b") for x in all_lines]
+# for i in range(len(all_lines)):
+#     val_, index_ = all_lines[i].split()
+#     val_ = float(val_)
+#     index_ = int(index_)
+#     true_spectrum[index_] = val_
+# chosen_eig = true_spectrum[search_rank]
 
 ################################################################################################
 
