@@ -102,7 +102,8 @@ for i in tqdm(range(10, max_samples, 10)):
         # get error this round
         # error_single_round = np.log((min_eig_single_round - chosen_eig)**2)
         # uncomment following line for relative error
-        error_single_round = np.log(np.abs(min_eig_single_round - chosen_eig) / np.abs(chosen_eig))
+        # error_single_round = np.log(np.abs(min_eig_single_round - chosen_eig) / np.abs(chosen_eig))
+        error_single_round = np.log(np.abs(min_eig_single_round - chosen_eig) / dataset_size)
         # add to the local list
         eig_vals.append(min_eig_single_round)
         error_vals.append(error_single_round)
@@ -126,7 +127,7 @@ sample_eigenvalues_scaled_std = np.array(sample_eigenvalues_scaled_std)
 tracked_errors = np.array(tracked_errors)
 tracked_errors_std = np.array(tracked_errors_std)
 
-with open("pickle_files/"+dataset_name+"_"+similarity_measure+".pkl", "wb") as pickle_file:
+with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl", "wb") as pickle_file:
     pickle.dump([sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
                   tracked_errors, tracked_errors_std], pickle_file)
 
