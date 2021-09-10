@@ -32,7 +32,7 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
 
     x_axis = np.array(list(range(10, max_samples, 10))) / dataset_size
     # clip all samples under 50
-    x_axis = x_axis[4:]
+    x_axis = x_axis[23:]
 
     true_min_eig_vec = true_min_eig*np.ones_like(x_axis)
     print(true_min_eig, search_rank)
@@ -40,8 +40,8 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
     estimate_min_eig_vec = np.array(sample_eigenvalues_scaled)
     estimate_std = np.array(sample_eigenvalues_scaled_std)
     # clip all samples under 50
-    estimate_min_eig_vec = estimate_min_eig_vec[4:]
-    estimate_std = estimate_std[4:]
+    estimate_min_eig_vec = estimate_min_eig_vec[23:]
+    estimate_std = estimate_std[23:]
 
     plt.gcf().clear()
     plt.plot(x_axis, true_min_eig_vec, label="True", alpha=1.0, color="#15B01A")
@@ -64,17 +64,18 @@ def display_precomputed_error(dataset_name, similarity_measure, error, error_std
                               search_rank, max_samples):
     x_axis = np.array(list(range(10, max_samples, 10))) / dataset_size
     # clip all samples under 50
-    x_axis = x_axis[4:]
+    x_axis = x_axis[23:]
     x_axis = np.log(x_axis)
     # clip all samples under 50
-    error = error[4:]
-    error_std = error_std[4:]
+    error = error[23:]
+    error_std = error_std[23:]
 
     plt.gcf().clear()
     plt.plot(x_axis, error, label="log of relative absolute error", alpha=1.0, color="#069AF3")
     plt.fill_between(x_axis, error-error_std, error+error_std, alpha=0.2, color="#069AF3")
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
-    plt.ylabel("Log of relative absolute error of eigenvalue estimates")
+    # plt.ylabel("Log of relative absolute error of eigenvalue estimates")
+    plt.ylabel("Log of scaled absolute error of eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     filename = "./figures/"+dataset_name+"/errors/"

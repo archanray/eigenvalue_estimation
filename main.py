@@ -50,7 +50,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 
 ###########################################PARAMETERS############################################
 # parameters
-trials = 10
+trials = 100
 similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "arxiv" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
@@ -75,7 +75,10 @@ if dataset_name != "kong":
     true_mat, dataset_size = get_data(dataset_name)
     print(true_mat.shape)
 
+# uncommment when running the full code
 true_spectrum = np.real(np.linalg.eigvals(true_mat))
+# # uncomment when running from saved values
+# true_spectrum = np.zeros(len(true_mat))
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
 #################################################################################################
