@@ -63,6 +63,7 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
 def display_precomputed_error(dataset_name, similarity_measure, error, dataset_size, \
                               search_rank, max_samples, error_std=[], \
                               tenth_percentile=[], ninetieth_percentile=[], log=True):
+    np.set_printoptions(precision=2)
     x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
     # clip all samples under 50
     # x_axis = x_axis[4:]
@@ -91,6 +92,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
         else:
             plt.fill_between(x_axis, tenth_percentile, ninetieth_percentile, alpha=0.2, color="#069AF3")
             plt.ylabel("scaled average absolute error of eigenvalue estimates")
+
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
     # plt.ylabel("Log of relative absolute error of eigenvalue estimates")
     plt.legend(loc="upper right")
