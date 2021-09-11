@@ -31,9 +31,8 @@ for sample_size in tqdm(range(50, 1000, 50)):
     # approx_eigval_list = []
     per_round_eps = []
     for trials in range(100):
-        print(trials)
-        all_ids = np.random.permutation(n)
-        samples = all_ids[0:n]
+        # print(trials)
+        samples = np.sort(random.sample(range(n), sample_size))
         sample_matrix = true_matrix[samples][:,samples]
         approx_eigval = n * np.linalg.eigvalsh(sample_matrix)[-3] / sample_size
         per_round_eps.append(np.abs(true_eig - approx_eigval) / n)
