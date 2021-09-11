@@ -27,7 +27,7 @@ per_size_eps_90p = []
 print("starting approximation")
 
 # perform approximation
-for sample_size in tqdm(range(50, 1000, 50)):
+for sample_size in tqdm(range(50, 1000, 10)):
     # approx_eigval_list = []
     per_round_eps = []
     for trials in range(100):
@@ -45,7 +45,7 @@ for sample_size in tqdm(range(50, 1000, 50)):
     per_size_eps_90p.append(np.percentile(per_round_eps, 90))
 
 
-for i in range(len(errors)):
+for i in range(len(per_size_eps_mean)):
   if per_size_eps_90p[i] <= per_size_eps_mean[i]:
       print("stats:", per_size_eps_mean[i], \
                       per_size_eps_max[i], \
@@ -73,8 +73,8 @@ plotting arrays
 """
 plotting functions
 """
-# import matplotlib.pyplot as plt
-# x_axis = list(range(len(tracked_errors[:,3])))
-# plt.plot(x_axis, np.log(tracked_errors[:,3]))
-# plt.fill_between(x_axis, np.log(tracked_tenth_percentile[:,3]), np.log(tracked_ninetieth_percentile[:,3]), alpha=0.2, color="#069AF3")
-# plt.show()
+import matplotlib.pyplot as plt
+x_axis = list(range(len(per_size_eps_mean)))
+plt.plot(x_axis, np.log(per_size_eps_mean))
+plt.fill_between(x_axis, np.log(per_size_eps_10p), np.log(per_size_eps_90p), alpha=0.2, color="#069AF3")
+plt.show()
