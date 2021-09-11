@@ -78,5 +78,9 @@ import matplotlib.pyplot as plt
 x_axis = np.array(list(range(50, 1000, 10)))
 x_axis = x_axis/n
 plt.plot(np.log(x_axis), np.log(per_size_eps_mean))
-# plt.fill_between(x_axis, np.log(per_size_eps_10p), np.log(per_size_eps_90p), alpha=0.2, color="#069AF3")
+plt.fill_between(np.log(x_axis), np.log(np.array(per_size_eps_mean)-np.array(per_size_eps_std)), \
+    np.log(np.array(per_size_eps_mean)+np.array(per_size_eps_std)), alpha=0.2, color="#069AF3")
+plt.show()
+plt.clf()
+plt.plot(np.log(x_axis), np.log(per_size_eps_mean))
 plt.show()
