@@ -30,9 +30,9 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
             sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, max_samples):
     true_min_eig = true_eigvals[search_rank]
 
-    x_axis = np.array(list(range(10, max_samples, 10))) / dataset_size
+    x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
     # clip all samples under 50
-    x_axis = x_axis[23:]
+    # x_axis = x_axis[4:]
 
     true_min_eig_vec = true_min_eig*np.ones_like(x_axis)
     print(true_min_eig, search_rank)
@@ -40,8 +40,8 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
     estimate_min_eig_vec = np.array(sample_eigenvalues_scaled)
     estimate_std = np.array(sample_eigenvalues_scaled_std)
     # clip all samples under 50
-    estimate_min_eig_vec = estimate_min_eig_vec[23:]
-    estimate_std = estimate_std[23:]
+    # estimate_min_eig_vec = estimate_min_eig_vec[4:]
+    # estimate_std = estimate_std[4:]
 
     plt.gcf().clear()
     plt.plot(x_axis, true_min_eig_vec, label="True", alpha=1.0, color="#15B01A")
@@ -60,22 +60,33 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
     return None
 
 
-def display_precomputed_error(dataset_name, similarity_measure, error, error_std, dataset_size, \
-                              search_rank, max_samples):
-    x_axis = np.array(list(range(10, max_samples, 10))) / dataset_size
+def display_precomputed_error(dataset_name, similarity_measure, error, dataset_size, \
+                              search_rank, max_samples, error_std=[], \
+                              tenth_percentile=[], ninetieth_percentile=[]):
+    x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
     # clip all samples under 50
-    x_axis = x_axis[23:]
+    # x_axis = x_axis[4:]
     x_axis = np.log(x_axis)
     # clip all samples under 50
-    error = error[23:]
-    error_std = error_std[23:]
+    # error = error[4:]
+    if error_std != []:
+        # error_std = error_std[4:]
+        pass
+    eps = 1e-10
 
     plt.gcf().clear()
-    plt.plot(x_axis, error, label="log of relative absolute error", alpha=1.0, color="#069AF3")
-    plt.fill_between(x_axis, error-error_std, error+error_std, alpha=0.2, color="#069AF3")
+    # plt.plot(x_axis, error, label="log of relative absolute error", alpha=1.0, color="#069AF3")
+    plt.plot(x_axis, np.log(error), label="log of average absolute error", alpha=1.0, color="#069AF3")
+    if error_std != []:
+        plt.fill_between(x_axis, np.log(error-error_std), np.log(error+error_std), alpha=0.2, color="#069AF3")
+        pass
+    else:
+        # tenth_percentile = tenth_percentile[4:]
+        # ninetieth_percentile = ninetieth_percentile[4:]
+        plt.fill_between(x_axis, np.log(tenth_percentile), np.log(ninetieth_percentile), alpha=0.2, color="#069AF3")
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
     # plt.ylabel("Log of relative absolute error of eigenvalue estimates")
-    plt.ylabel("Log of scaled absolute error of eigenvalue estimates")
+    plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     filename = "./figures/"+dataset_name+"/errors/"
