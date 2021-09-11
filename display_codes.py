@@ -76,18 +76,23 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
 
     plt.gcf().clear()
     # plt.plot(x_axis, error, label="log of relative absolute error", alpha=1.0, color="#069AF3")
-    plt.plot(x_axis, np.log(error), label="log of average absolute error", alpha=1.0, color="#069AF3")
+    if log == True:
+        plt.plot(x_axis, np.log(error), label="log of average absolute error", alpha=1.0, color="#069AF3")
+    else:
+        plt.plot(x_axis, error, label="average absolute error", alpha=1.0, color="#069AF3")
     if tenth_percentile == []:
         plt.fill_between(x_axis, np.log(error-error_std), np.log(error+error_std), alpha=0.2, color="#069AF3")
+        plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
         pass
     else:
         if log == True:
             plt.fill_between(x_axis, np.log(tenth_percentile), np.log(ninetieth_percentile), alpha=0.2, color="#069AF3")
+            plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
         else:
             plt.fill_between(x_axis, tenth_percentile, ninetieth_percentile, alpha=0.2, color="#069AF3")
+            plt.ylabel("scaled average absolute error of eigenvalue estimates")
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
     # plt.ylabel("Log of relative absolute error of eigenvalue estimates")
-    plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     if log == True:
