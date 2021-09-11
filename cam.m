@@ -12,8 +12,8 @@ for i=1:length(sample_sizes)
     r = randperm(n); r = r(1:sample_sizes(i));
     etilde = eigs(A(r,r),1)*n/sample_sizes(i);
     etilde;
-    errors(i) = errors(i) + abs(e1-etilde)/n;
+    errors(i) = errors(i) + abs(e1-etilde);
   end
   errors(i) = errors(i)/100;
 end
-plot(log(sample_sizes),errors);
+plot(log(sample_sizes),log(errors));
