@@ -7,15 +7,16 @@ from similarities import sigmoid, tps
 import pickle
 
 # labels and other hyperparameters
-dataset_name = "kong"
+dataset_name = "block"
 # similarity_measure = "tps"
-search_rank = [-3]
+search_rank = [-1]
 
 # load dataset
 dataset, n = get_data(dataset_name)
 similarity_measure = tps
-true_matrix = tps(dataset, dataset)
-true_eig = np.linalg.eigvalsh(true_matrix)[-3]
+# true_matrix = tps(dataset, dataset)
+true_matrix = dataset
+true_eig = np.linalg.eigvalsh(true_matrix)[-1]
 
 per_size_eps_mean = []
 per_size_eps_max = []
@@ -34,7 +35,7 @@ for sample_size in tqdm(range(50, 1000, 10)):
         # print(trials)
         samples = np.sort(random.sample(range(n), sample_size))
         sample_matrix = true_matrix[samples][:,samples]
-        approx_eigval = n * np.linalg.eigvalsh(sample_matrix)[-3] / sample_size
+        approx_eigval = n * np.linalg.eigvalsh(sample_matrix)[-1] / sample_size
         per_round_eps.append(np.abs(true_eig - approx_eigval) / n)
 
     per_size_eps_mean.append(np.mean(per_round_eps))
@@ -74,7 +75,8 @@ plotting arrays
 plotting functions
 """
 import matplotlib.pyplot as plt
-x_axis = list(range(len(per_size_eps_mean)))
-plt.plot(x_axis, np.log(per_size_eps_mean))
-plt.fill_between(x_axis, np.log(per_size_eps_10p), np.log(per_size_eps_90p), alpha=0.2, color="#069AF3")
+x_axis = np.array(list(range(50, 1000, 10)))
+x_axis = x_axis/n
+plt.plot(np.log(x_axis), np.log(per_size_eps_mean))
+# plt.fill_between(x_axis, np.log(per_size_eps_10p), np.log(per_size_eps_90p), alpha=0.2, color="#069AF3")
 plt.show()
