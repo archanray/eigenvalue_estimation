@@ -39,7 +39,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
     list_of_available_indices = range(n)
     sample_indices = np.sort(random.sample(list_of_available_indices, s))
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
-    all_eig_val_estimates = np.real(np.linalg.eigvals(subsample_matrix))
+    all_eig_val_estimates = np.real(np.linalg.eigvalsh(subsample_matrix))
     all_eig_val_estimates.sort()
 
     min_eig = np.array(all_eig_val_estimates)[rankcheck]
@@ -51,9 +51,9 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 100
-similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
+similarity_measure = "tps" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "erdos" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
+dataset_name = "kong" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
 if dataset_name == "arxiv":
     max_samples = 5000
 else:
