@@ -50,10 +50,10 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 
 ###########################################PARAMETERS############################################
 # parameters
-trials = 100
+trials = 50
 similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "block" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
+dataset_name = "arxiv" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
 if dataset_name == "arxiv":
     max_samples = 5000
 else:
@@ -94,7 +94,7 @@ true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
 
 # comment out if you dont want to rerun and use only pickles
-for i in tqdm(range(50, max_samples, 10)):
+for i in tqdm(range(230, max_samples, 10)):
     eig_vals = []
     error_vals = []
     for j in range(trials):
