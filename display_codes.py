@@ -62,7 +62,7 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
 
 def display_precomputed_error(dataset_name, similarity_measure, error, dataset_size, \
                               search_rank, max_samples, error_std=[], \
-                              tenth_percentile=[], ninetieth_percentile=[]):
+                              tenth_percentile=[], ninetieth_percentile=[], log=True):
     x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
     # clip all samples under 50
     # x_axis = x_axis[4:]
@@ -77,19 +77,23 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     plt.gcf().clear()
     # plt.plot(x_axis, error, label="log of relative absolute error", alpha=1.0, color="#069AF3")
     plt.plot(x_axis, np.log(error), label="log of average absolute error", alpha=1.0, color="#069AF3")
-    if error_std != []:
+    if tenth_percentile == []:
         plt.fill_between(x_axis, np.log(error-error_std), np.log(error+error_std), alpha=0.2, color="#069AF3")
         pass
     else:
-        # tenth_percentile = tenth_percentile[4:]
-        # ninetieth_percentile = ninetieth_percentile[4:]
-        plt.fill_between(x_axis, np.log(tenth_percentile), np.log(ninetieth_percentile), alpha=0.2, color="#069AF3")
+        if log == True:
+            plt.fill_between(x_axis, np.log(tenth_percentile), np.log(ninetieth_percentile), alpha=0.2, color="#069AF3")
+        else:
+            plt.fill_between(x_axis, tenth_percentile, ninetieth_percentile, alpha=0.2, color="#069AF3")
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
     # plt.ylabel("Log of relative absolute error of eigenvalue estimates")
     plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
-    filename = "./figures/"+dataset_name+"/errors/"
+    if log == True:
+        filename = "./figures/"+dataset_name+"/errors/"
+    else:
+        filename = "./figures/"+dataset_name+"/non_log_errors/"
     if not os.path.isdir(filename):
         os.makedirs(filename)
     filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"

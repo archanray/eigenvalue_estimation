@@ -50,7 +50,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 
 ###########################################PARAMETERS############################################
 # parameters
-trials = 100
+trials = 20
 similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "facebook" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
@@ -146,7 +146,7 @@ with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl"
     pickle.dump([sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
                   tracked_errors, tracked_errors_std, tracked_tenth_percentile, tracked_ninetieth_percentile], pickle_file)
 
-# uncomment to load from pickle file only
+# # uncomment to load from pickle file only
 # with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl", "rb") as pickle_file:
 #     A = pickle.load (pickle_file)
 # [sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
@@ -174,3 +174,8 @@ for i in range(len(search_rank)):
         error_std=tracked_errors_std[:,i],\
         tenth_percentile=tracked_tenth_percentile[:,i], \
         ninetieth_percentile=tracked_ninetieth_percentile[:,i])
+    display_precomputed_error(dataset_name, similarity_measure, tracked_errors[:,i], \
+        dataset_size, search_rank[i], max_samples, \
+        error_std=tracked_errors_std[:,i],\
+        tenth_percentile=tracked_tenth_percentile[:,i], \
+        ninetieth_percentile=tracked_ninetieth_percentile[:,i], log = False)
