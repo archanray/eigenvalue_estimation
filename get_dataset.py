@@ -59,7 +59,7 @@ def get_data(name):
         """
         dataset_size = 5000
         A = np.zeros((dataset_size, dataset_size))
-        B = np.ones((int(dataset_size/10), int(dataset_size/10)))
+        B = np.ones((int(dataset_size/2), int(dataset_size/2)))
         A[0:len(B), 0:len(B)] = B
 
         return A, dataset_size
