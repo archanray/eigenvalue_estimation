@@ -27,10 +27,10 @@ def convert_rank_to_order(search_rank):
     return rank_name
 
 def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search_rank, \
-            sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, max_samples):
+            sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, max_samples, min_samples):
     true_min_eig = true_eigvals[search_rank]
 
-    x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
+    x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
     # clip all samples under 50
     # x_axis = x_axis[4:]
 
@@ -62,7 +62,7 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
 
 def display_precomputed_error(dataset_name, similarity_measure, error, dataset_size, \
                               search_rank, max_samples, error_std=[], \
-                              tenth_percentile=[], ninetieth_percentile=[], log=True):
+                              percentile1=[], percentile2=[], log=True, min_samples=50):
     np.set_printoptions(precision=2)
     x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
     # clip all samples under 50
@@ -73,7 +73,6 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     if error_std != []:
         # error_std = error_std[4:]
         pass
-    eps = 1e-10
 
     plt.gcf().clear()
     # plt.plot(x_axis, error, label="log of relative absolute error", alpha=1.0, color="#069AF3")
@@ -81,26 +80,51 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
         plt.plot(x_axis, np.log(error), label="log of average absolute error", alpha=1.0, color="#069AF3")
     else:
         plt.plot(x_axis, error, label="average absolute error", alpha=1.0, color="#069AF3")
-    if tenth_percentile == []:
+    if percentile1 == []:
         plt.fill_between(x_axis, np.log(error-error_std), np.log(error+error_std), alpha=0.2, color="#069AF3")
         plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
         pass
     else:
         if log == True:
-            plt.fill_between(x_axis, np.log(tenth_percentile), np.log(ninetieth_percentile), alpha=0.2, color="#069AF3")
+            plt.fill_between(x_axis, np.log(percentile1), np.log(percentile2), alpha=0.2, color="#069AF3")
             plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
         else:
-            plt.fill_between(x_axis, tenth_percentile, ninetieth_percentile, alpha=0.2, color="#069AF3")
+            plt.fill_between(x_axis, percentile1, percentile2, alpha=0.2, color="#069AF3")
             plt.ylabel("scaled average absolute error of eigenvalue estimates")
 
     plt.xlabel("Log of proportion of dataset chosen as landmark samples")
     # plt.ylabel("Log of relative absolute error of eigenvalue estimates")
+    if dataset_name == "block" and search_rank == -1:
+        plt.ylim(-6.0, -2.5)
     plt.legend(loc="upper right")
     plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     if log == True:
         filename = "./figures/"+dataset_name+"/errors/"
     else:
         filename = "./figures/"+dataset_name+"/non_log_errors/"
+    if not os.path.isdir(filename):
+        os.makedirs(filename)
+    filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"
+    plt.savefig(filename)
+    return None
+
+
+def display_error_percentile(dataset_name, similarity_measure, error, dataset_size,\
+                            search_rank, max_samples, percentile1, percentile2):
+    np.set_printoptions(precision=2)
+    x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
+    x_axis = np.log(x_axis)
+    plt.gcf().clear()
+    plt.plot(x_axis, np.log(error), label="log of average absolute error", alpha=1.0, color="#069AF3")
+    plt.fill_between(x_axis, np.log(percentile1), np.log(percentile2), alpha=0.2, color="#069AF3")
+    plt.ylabel("Log of scaled average absolute error of eigenvalue estimates")
+    plt.xlabel("Log of proportion of dataset chosen as landmark samples")
+
+    if dataset_name == "block" and search_rank == -1:
+        plt.ylim(-6.0, -2.5)
+    plt.legend(loc="upper right")
+    plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
+    filename = "./figures/"+dataset_name+"/errors/"
     if not os.path.isdir(filename):
         os.makedirs(filename)
     filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"

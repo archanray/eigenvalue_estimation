@@ -54,6 +54,7 @@ trials = 50
 similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "arxiv" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block"
+min_samples = 50
 if dataset_name == "arxiv":
     max_samples = 5000
 else:
@@ -88,13 +89,13 @@ sample_eigenvalues_scaled = []
 sample_eigenvalues_scaled_std = []
 tracked_errors = []
 tracked_errors_std = []
-tracked_tenth_percentile = []
-tracked_ninetieth_percentile = []
+tracked_percentile1 = []
+tracked_percentile2 = []
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
 
 # comment out if you dont want to rerun and use only pickles
-for i in tqdm(range(230, max_samples, 10)):
+for i in tqdm(range(min_samples, max_samples, 10)):
     eig_vals = []
     error_vals = []
     for j in range(trials):
@@ -122,29 +123,29 @@ for i in tqdm(range(230, max_samples, 10)):
     std_min_eig = np.std(eig_vals, 0)
     mean_error = np.mean(error_vals, 0)
     std_error = np.std(error_vals, 0)
-    tenth_percentile = np.percentile(error_vals, 10, axis=0)
-    ninetieth_percentile = np.percentile(error_vals, 90, axis=0)
+    percentile1 = np.percentile(error_vals, 20, axis=0)
+    percentile2 = np.percentile(error_vals, 80, axis=0)
 
     # add statistics to the global list
     sample_eigenvalues_scaled.append(mean_min_eig)
     sample_eigenvalues_scaled_std.append(std_min_eig)
     tracked_errors.append(mean_error)
     tracked_errors_std.append(std_error)
-    tracked_tenth_percentile.append(tenth_percentile)
-    tracked_ninetieth_percentile.append(ninetieth_percentile)
+    tracked_percentile1.append(percentile1)
+    tracked_percentile2.append(percentile2)
 
 # convert to arrays
 sample_eigenvalues_scaled = np.array(sample_eigenvalues_scaled)
 sample_eigenvalues_scaled_std = np.array(sample_eigenvalues_scaled_std)
 tracked_errors = np.array(tracked_errors)
 tracked_errors_std = np.array(tracked_errors_std)
-tracked_tenth_percentile = np.array(tracked_tenth_percentile)
-tracked_ninetieth_percentile = np.array(tracked_ninetieth_percentile)
+tracked_percentile1 = np.array(tracked_percentile1)
+tracked_percentile2 = np.array(tracked_percentile2)
 
 # comment out if you dont want to rerun and use only pickles
 with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl", "wb") as pickle_file:
     pickle.dump([sample_eigenvalues_scaled, sample_eigenvalues_scaled_std, \
-                  tracked_errors, tracked_errors_std, tracked_tenth_percentile, tracked_ninetieth_percentile], pickle_file)
+            tracked_errors, tracked_errors_std, tracked_percentile1, tracked_percentile2], pickle_file)
 
 # # uncomment to load from pickle file only
 # with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl", "rb") as pickle_file:
@@ -169,14 +170,14 @@ with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl"
 
 for i in range(len(search_rank)):
     display(dataset_name, similarity_measure, true_spectrum, dataset_size, search_rank[i], \
-        sample_eigenvalues_scaled[:,i], sample_eigenvalues_scaled_std[:,i], max_samples)
+        sample_eigenvalues_scaled[:,i], sample_eigenvalues_scaled_std[:,i], max_samples, min_samples)
     display_precomputed_error(dataset_name, similarity_measure, tracked_errors[:,i], \
         dataset_size, search_rank[i], max_samples, \
         error_std=tracked_errors_std[:,i],\
-        tenth_percentile=tracked_tenth_percentile[:,i], \
-        ninetieth_percentile=tracked_ninetieth_percentile[:,i])
-    display_precomputed_error(dataset_name, similarity_measure, tracked_errors[:,i], \
-        dataset_size, search_rank[i], max_samples, \
-        error_std=tracked_errors_std[:,i],\
-        tenth_percentile=tracked_tenth_percentile[:,i], \
-        ninetieth_percentile=tracked_ninetieth_percentile[:,i], log = False)
+        percentile1=tracked_percentile1[:,i], \
+        percentile2=tracked_percentile2[:,i], min_samples=min_samples)
+    # display_precomputed_error(dataset_name, similarity_measure, tracked_errors[:,i], \
+    #     dataset_size, search_rank[i], max_samples, \
+    #     error_std=tracked_errors_std[:,i],\
+    #     percentile1=tracked_percentile1[:,i], \
+    #     percentile2=tracked_percentile2[:,i], log = False)

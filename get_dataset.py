@@ -82,7 +82,7 @@ def get_data(name):
         A = nx.adjacency_matrix(g)
         A = A.todense()
         if name == "facebook":
-            A = (A+A.T)/2 # symmetrizing as the original dataset is directed
+            A = A+A.T # symmetrizing as the original dataset is directed
 
         dataset_size = len(A)
         
