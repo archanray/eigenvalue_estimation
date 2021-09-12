@@ -64,7 +64,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
                               search_rank, max_samples, error_std=[], \
                               percentile1=[], percentile2=[], log=True, min_samples=50):
     np.set_printoptions(precision=2)
-    x_axis = np.array(list(range(50, max_samples, 10))) / dataset_size
+    x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
     # clip all samples under 50
     # x_axis = x_axis[4:]
     x_axis = np.log(x_axis)
