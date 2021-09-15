@@ -31,3 +31,12 @@ The four hyperparameters for our code are:
 * Dataset name (line 66 in `main.py`).
 
 Please take a look at lines 61-67 in code `main.py` for more details.
+
+### Datasets
+
+Most datasets in the paper are synthetic. There are however two real world graph datasets. These are taken from [SNAP](https://snap.stanford.edu/data/).
+
+1. [Facebook](https://snap.stanford.edu/data/ego-Facebook.html) --  [data](https://snap.stanford.edu/data/facebook_combined.txt.gz).
+2. [ArXiv COND-MAT](https://snap.stanford.edu/data/ca-CondMat.html) -- [data](https://snap.stanford.edu/data/ca-CondMat.txt.gz).
+
+Please copy these files in a folder named `data` for our code to run without error. Otherwise modify the file `get_dataset.py` to use the path to your dataset. 
