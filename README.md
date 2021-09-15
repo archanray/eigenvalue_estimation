@@ -24,9 +24,9 @@ We experimented in this version and do not expect this to fail in another versio
 ### Hyperparameter modifications
 
 The four hyperparameters for our code are: 
-a. Number of trials (line 63 in code `main.py`);
-b. Similarity measure (line 64 in code `main.py`), is only useful for datasets where a similarity measure is required. Otherwise set to `default`;
-c. Search rank (line 65 in `main.py`), is used to track the eigenvalues and errors of specified eigenvalues;
-d. Dataset name (line 66 in `main.py`).
+a) Number of trials (line 63 in code `main.py`);
+b) Similarity measure (line 64 in code `main.py`), is only useful for datasets where a similarity measure is required. Otherwise set to `default`;
+c) Search rank (line 65 in `main.py`), is used to track the eigenvalues and errors of specified eigenvalues;
+d) Dataset name (line 66 in `main.py`).
 
 Please take a look at lines 61-67 in code `main.py` for more details.
