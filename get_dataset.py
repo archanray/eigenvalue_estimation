@@ -112,3 +112,24 @@ def get_data(name):
         max_sample_size = int(dataset_size * 0.2)
 
         return A, dataset_size, min_sample_size, max_sample_size
+
+    if name == "random_equal_signs":
+        """
+        dataset for tracking frobenius norm error of BSSB-BB
+        """
+        dataset_size = 2000
+        A = np.random.random((dataset_size, dataset_size))
+        A = A.T @ A
+        w, v = np.linalg.eig(A)
+        w = np.array(list(range(2000))).astype(float)
+        w = w - 1000
+        w[0:500] = w[0:500] - 100.0 + np.random.rand()
+        w[-500:] = w[-500:] + 100.0 + np.random.rand()
+        w[500:1501] = 0
+
+        w_half = np.lib.scimath.sqrt(w)
+        B = v @ np.diag(w_half)
+
+        return B
+    
+

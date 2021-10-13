@@ -168,3 +168,33 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     
     return None
 
+def frobenius_error_disp(mean_errors, std_errors, dataset_name, min_samples, max_samples, step_samples, dataset_size):
+    from matplotlib.ticker import FormatStrFormatter
+    from matplotlib.ticker import MaxNLocator, MultipleLocator
+
+    size_of_fonts = 16
+
+    np.set_printoptions(precision=0)
+    x_axis = np.array(list(range(min_samples, max_samples, step_samples))) / dataset_size
+    x_axis = np.log(x_axis)
+
+    plt.gcf().clear()
+    fig, ax = plt.subplots()
+
+    plt.rcParams.update({'font.size': 18})
+    plt.plot(x_axis, np.log(mean_errors), alpha=1.0, color="#069AF3")
+    plt.fill_between(x_axis, np.log(mean_errors-std_errors), np.log(mean_errors+std_errors), alpha=0.2, color="#069AF3")
+
+    plt.xlabel("log sampling rate", fontsize = size_of_fonts)
+    plt.ylabel("log average frobenius error", fontsize = size_of_fonts)
+
+    plt.title("Random matrix")
+    
+    # save file
+    filename = "./figures/"+dataset_name+"/frobenius_error/"
+    if not os.path.isdir(filename):
+        os.makedirs(filename)
+    filename = filename+"error.pdf"
+    plt.savefig(filename)
+
+    return None
