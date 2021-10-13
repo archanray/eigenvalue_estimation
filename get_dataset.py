@@ -123,9 +123,17 @@ def get_data(name):
         w, v = np.linalg.eig(A)
         w = np.array(list(range(2000))).astype(float)
         w = w - 1000
-        w[0:500] = w[0:500] - 100.0 + np.random.rand()
-        w[-500:] = w[-500:] + 100.0 + np.random.rand()
-        w[500:1501] = 0
+        w[0:500] = w[0:500] - 100.0*np.ones(w[0:500].shape) + np.random.rand(len(w[0:500]))
+        w[-500:] = w[-500:] + 100.0*np.ones(w[-500:].shape) + np.random.rand(len(w[-500:]))
+        w[500:1501] = np.zeros(w[500:1501].shape) + np.random.rand(len(w[500:1501]))
+
+        # plot eigenvalues
+        import matplotlib.pyplot as plt
+        plt.plot(np.array(list(range(2000))), w)
+        plt.xlabel("eigenvalue indices")
+        plt.ylabel("eigenvalues")
+        plt.title("eigenvalues of random matrix")
+        plt.savefig("./figures/random_equal/eigenvalues/eigvals.pdf")
 
         w_half = np.lib.scimath.sqrt(w)
         B = v @ np.diag(w_half)
