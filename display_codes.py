@@ -62,7 +62,7 @@ def display(dataset_name, similarity_measure, true_eigvals, dataset_size, search
 
 def display_precomputed_error(dataset_name, similarity_measure, error, dataset_size, \
                               search_rank, max_samples, error_std=[], \
-                              percentile1=[], percentile2=[], log=True, min_samples=50):
+                              percentile1=[], percentile2=[], log=True, min_samples=50, true_eigval=0):
     np.set_printoptions(precision=2)
     x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
     # clip all samples under 50
@@ -97,7 +97,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     if dataset_name == "block" and search_rank == -1:
         plt.ylim(-6.0, -2.5)
     plt.legend(loc="upper right")
-    plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue")
+    plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue = "+str(true_eigval))
     if log == True:
         filename = "./figures/"+dataset_name+"/errors/"
     else:

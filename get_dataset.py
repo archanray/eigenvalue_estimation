@@ -1,6 +1,7 @@
 import skimage.io
 from skimage import feature
 import numpy as np
+from sklearn.preprocessing import normalize
 
 def get_data(name):
     if name == "kong":
@@ -87,3 +88,41 @@ def get_data(name):
         dataset_size = len(A)
         
         return A, dataset_size
+
+    if name == "synthetic_tester":
+        """
+        uses a matrix with 1/eps^2 eigvals of size  +-eps*n and 1 eigenvalue of size +-n/2
+        """
+        print("extracting eigenvectors")
+        dataset_size = 2500
+        A_p = np.random.random((dataset_size, dataset_size))
+        A_p = A_p @ A_p.T
+        A_p = A_p / np.max(A_p)
+        eigvals, eigvecs = np.linalg.eig(A_p)
+        # print(eigvals.shape)
+        # mask = np.random.random((dataset_size, dataset_size)) #< 0.2
+        # eigvecs = np.where(mask, 0*eigvecs, eigvecs)
+        # eigvecs = normalize(eigvecs, axis=0, norm="l2")
+        eigvecs[:,0] = (1/np.sqrt(dataset_size))*np.ones(dataset_size)
+        
+        print("extracting eigenvalues")
+        eigvals = (1e-6)*np.ones(dataset_size)
+        eps = 0.1
+        small_eigs = eps*dataset_size
+        large_eig = dataset_size/2
+        lens = int(1/(eps**2))
+        ones = np.ones(lens)
+        all_small_eigs = ones*small_eigs
+        eigvals[0] = large_eig
+        eigvals[1:lens+1] = all_small_eigs
+        mask = np.random.random(dataset_size) < 0.5
+        eigvals = np.where(mask, -eigvals, eigvals)
+        print(eigvals)
+        eigvals_matrix = np.diag(eigvals)
+
+        print("generating final matrix")
+        A = (eigvecs @ eigvals_matrix) @ eigvecs.T
+
+        return A, dataset_size
+
+
