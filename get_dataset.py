@@ -1,11 +1,21 @@
+
+"""
+create/get dataset
+"""
+
 import skimage.io
 from skimage import feature
 import numpy as np
+<<<<<<< HEAD
 from sklearn.preprocessing import normalize
+=======
+from display_codes import display_image
+>>>>>>> 01bb3260635c6c259f8541543812733a72ad434b
 
 def get_data(name):
     if name == "kong":
         imagedrawing = skimage.io.imread('donkeykong.tn768.png')
+        display_image(imagedrawing)
         dataset_size = 5000
         edges = imagedrawing
         xy = np.stack(np.where(edges == 0), axis=1)
@@ -19,7 +29,10 @@ def get_data(name):
         xy[:, 0] = xy[:,0] / np.max(xy[:,0])
         xy[:, 1] = xy[:,1] / np.max(xy[:,1])
 
-        return xy, dataset_size
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+
+        return xy, dataset_size, min_sample_size, max_sample_size
 
     if name == "asymmetric":
         """
@@ -28,7 +41,10 @@ def get_data(name):
         dataset_size = 5000
         xy = np.random.random((dataset_size, dataset_size))
 
-        return xy, dataset_size
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+
+        return xy, dataset_size, min_sample_size, max_sample_size
 
     if name == "binary":
         """
@@ -40,7 +56,10 @@ def get_data(name):
         ind = np.random.choice(range(dataset_size), size=int(dataset_size*c), replace=False)
         A[ind, ind] = -1
 
-        return A, dataset_size
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+
+        return A, dataset_size, min_sample_size, max_sample_size
 
     if name == "random_sparse":
         """
@@ -52,7 +71,10 @@ def get_data(name):
         A = A.astype(int)
         A = np.triu(A) + np.triu(A).T
 
-        return A, dataset_size
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+
+        return A, dataset_size, min_sample_size, max_sample_size
 
     if name == "block":
         """
@@ -63,7 +85,10 @@ def get_data(name):
         B = np.ones((int(dataset_size/2), int(dataset_size/2)))
         A[0:len(B), 0:len(B)] = B
 
-        return A, dataset_size
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+
+        return A, dataset_size, min_sample_size, max_sample_size
 
     if name == "arxiv" or name == "facebook" or name == "erdos":
         """
@@ -125,4 +150,36 @@ def get_data(name):
 
         return A, dataset_size
 
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+
+        return A, dataset_size, min_sample_size, max_sample_size
+
+    if name == "random_equal_signs":
+        """
+        dataset for tracking frobenius norm error of BSSB-BB
+        """
+        dataset_size = 2000
+        A = np.random.random((dataset_size, dataset_size))
+        A = A.T @ A
+        w, v = np.linalg.eig(A)
+        w = np.array(list(range(2000))).astype(float)
+        w = w - 1000
+        w[0:500] = w[0:500] - 100.0*np.ones(w[0:500].shape) + np.random.rand(len(w[0:500]))
+        w[-500:] = w[-500:] + 100.0*np.ones(w[-500:].shape) + np.random.rand(len(w[-500:]))
+        w[500:1501] = np.zeros(w[500:1501].shape) + np.random.rand(len(w[500:1501]))
+
+        # plot eigenvalues
+        import matplotlib.pyplot as plt
+        plt.plot(np.array(list(range(2000))), w)
+        plt.xlabel("eigenvalue indices")
+        plt.ylabel("eigenvalues")
+        plt.title("eigenvalues of random matrix")
+        plt.savefig("./figures/random_equal/eigenvalues/eigvals.pdf")
+
+        w_half = np.lib.scimath.sqrt(w)
+        B = v @ np.diag(w_half)
+
+        return B
+    
 

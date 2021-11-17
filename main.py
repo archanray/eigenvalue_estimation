@@ -1,9 +1,14 @@
+
+"""
+main code and entry point for all experiments
+"""
+
 import numpy as np
 import random
 from tqdm import tqdm
 from display_codes import display, display_precomputed_error
 from get_dataset import get_data
-from similarities import sigmoid, tps
+from similarities import hyperbolic_tangent, thin_plane_spline
 import pickle
 
 """
@@ -15,11 +20,14 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
     """
     input: original matrix
     output: sample eigenvalue
+    if using some function to compute elements, this function allows
+    you to run the code without instantiating the whole matrix
     """
     n = len(data)
     list_of_available_indices = range(n)
     sample_indices = np.sort(random.sample(list_of_available_indices, s))
     subsample_matrix = similarity_measure(data[sample_indices,:], data[sample_indices,:])
+    # useful for only hermitian matrices
     all_eig_val_estimates = np.real(np.linalg.eigvalsh(subsample_matrix))
     all_eig_val_estimates.sort()
   
@@ -32,13 +40,15 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
 
 def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
     """
-    input: opriginal matrix
+    input: original matrix
     output: sample eigenvalue
+    requires data matrix to be fully instantiated
     """
     n = len(data_matrix)
     list_of_available_indices = range(n)
     sample_indices = np.sort(random.sample(list_of_available_indices, s))
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
+    # useful for only hermitian matrices
     all_eig_val_estimates = np.real(np.linalg.eigvalsh(subsample_matrix))
     all_eig_val_estimates.sort()
 
@@ -51,8 +61,9 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 50
-similarity_measure = "default" #"tps", "sigmoid" for kong, "default" for binary and random_sparse
+similarity_measure = "tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
+<<<<<<< HEAD
 dataset_name = "synthetic_tester" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
 min_samples = 50
 if dataset_name == "arxiv":
@@ -63,30 +74,41 @@ if dataset_name == "synthetic_tester":
     max_samples = 500
 # uncomment for run saved instance
 # dataset_size = 5000
+=======
+dataset_name = "kong" #"kong", "facebook", "arxiv", "block", "erdos"
+>>>>>>> 01bb3260635c6c259f8541543812733a72ad434b
 #################################################################################################
 
 ############################################# GRAB THE MATRICES #################################
 if dataset_name == "kong":
-    xy, dataset_size = get_data(dataset_name)
-    if similarity_measure == "sigmoid":
-        similarity = sigmoid
+    xy, dataset_size, min_samples, max_samples = get_data(dataset_name)
+    if similarity_measure == "ht":
+        similarity = hyperbolic_tangent
     if similarity_measure == "tps":
-        similarity = tps
+        similarity = thin_plane_spline
     true_mat = similarity(xy, xy)
 
 if dataset_name != "kong":
-    true_mat, dataset_size = get_data(dataset_name)
+    true_mat, dataset_size, min_samples, max_samples = get_data(dataset_name)
     print(true_mat.shape)
 
 # uncommment when running the full code
 true_spectrum = np.real(np.linalg.eigvals(true_mat))
+
 # uncomment when running from saved values
 # true_spectrum = np.zeros(len(true_mat))
+
+
+# uncomment when running from saved values
+# true_spectrum = np.zeros(len(true_mat))
+
+
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
 #################################################################################################
 
 ################################### COMPUTE ERRORS AND EIGS #####################################
+# logging data-structures
 sample_eigenvalues_scaled = []
 sample_eigenvalues_scaled_std = []
 tracked_errors = []
@@ -95,6 +117,7 @@ tracked_percentile1 = []
 tracked_percentile2 = []
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
+
 print(true_spectrum)
 
 # comment out if you dont want to rerun and use only pickles
@@ -137,6 +160,9 @@ for i in tqdm(range(min_samples, max_samples, 10)):
     tracked_percentile1.append(percentile1)
     tracked_percentile2.append(percentile2)
 
+############################# PREPARE TO SAVE OR DISPLAY ################################################
+
+# comment out if you dont want to rerun and use only pickles
 # convert to arrays
 sample_eigenvalues_scaled = np.array(sample_eigenvalues_scaled)
 sample_eigenvalues_scaled_std = np.array(sample_eigenvalues_scaled_std)
@@ -159,6 +185,10 @@ with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl"
 
 # # uncomment to load eigvalues from saved file
 # f = open("figures/"+dataset_name+"/eigvals.txt", "r")
+# if dataset_name == "kong":
+#     f = open("figures/"+dataset_name+"/"+similarity_measure+"_eigvals.txt", "r")
+# else:
+#     f = open("figures/"+dataset_name+"/eigvals.txt", "r")
 # all_lines = f.readlines()
 # f.close()
 # all_lines = [x.strip("\r\b") for x in all_lines]
@@ -169,7 +199,11 @@ with open("pickle_files/new_pickles_"+dataset_name+"_"+similarity_measure+".pkl"
 #     true_spectrum[index_] = val_
 # chosen_eig = true_spectrum[search_rank]
 
+
 ################################################################################################
+
+###################################DISPLAY SECTION######################################
+
 
 for i in range(len(search_rank)):
     display(dataset_name, similarity_measure, true_spectrum, dataset_size, search_rank[i], \
@@ -185,3 +219,4 @@ for i in range(len(search_rank)):
     #     error_std=tracked_errors_std[:,i],\
     #     percentile1=tracked_percentile1[:,i], \
     #     percentile2=tracked_percentile2[:,i], log = False)
+
