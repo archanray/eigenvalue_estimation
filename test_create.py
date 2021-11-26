@@ -22,3 +22,5 @@ for i in tqdm(range(100)):
 
 	if np.min(A) >= -1*bound and np.max(A) <= 1*bound:
 		print(num)
+
+
