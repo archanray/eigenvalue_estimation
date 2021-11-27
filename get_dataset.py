@@ -112,6 +112,7 @@ def get_data(name):
         return A, dataset_size
 
     if name == "multi_block_synthetic":
+        from random import sample
         n = 5000
         eps = 0.1
 
@@ -154,7 +155,7 @@ def get_data(name):
                     R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
                                 = flag*sample_block
         A = A+R
-        return A, n
+        return A, n, 50, 1000
 
     if name == "synthetic_tester":
         """

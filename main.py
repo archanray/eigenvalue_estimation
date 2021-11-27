@@ -61,7 +61,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 ###########################################PARAMETERS############################################
 # parameters
 trials = 50
-similarity_measure = "tps" #"tps", "ht" for kong, "default" for binary and random_sparse
+similarity_measure = "default"#"tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "multi_block_synthetic"#"synthetic_tester" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
 min_samples = 50
@@ -73,7 +73,7 @@ if dataset_name == "synthetic_tester":
     max_samples = 500
 # uncomment for run saved instance
 # dataset_size = 5000
-dataset_name = "kong" #"kong", "facebook", "arxiv", "block", "erdos"
+# dataset_name = "kong" #"kong", "facebook", "arxiv", "block", "erdos"
 #################################################################################################
 
 ############################################# GRAB THE MATRICES #################################
@@ -94,11 +94,6 @@ true_spectrum = np.real(np.linalg.eigvals(true_mat))
 
 # uncomment when running from saved values
 # true_spectrum = np.zeros(len(true_mat))
-
-
-# uncomment when running from saved values
-# true_spectrum = np.zeros(len(true_mat))
-
 
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
