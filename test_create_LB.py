@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 from random import sample
 
-n = 2500
+n = 15000
 eps = 0.1
 
 A = np.ones((n,n))
@@ -54,7 +54,11 @@ print("generated the matrix, proceeding to compute eigenvalues")
 
 A = A+R
 eigvals, eigvecs = np.linalg.eig(A)
+E = np.abs(eigvals)
+id_ = np.argmax(E)
+max_eigval = eigvals[id_]
 plt.scatter(range(n), eigvals)
 plt.xlabel("indices")
 plt.ylabel("eigenvalues")
+plt.title("max abs val eig:"+str(max_eigval))
 plt.savefig("figures/plot_of_eigenvalues.pdf")
