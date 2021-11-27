@@ -107,7 +107,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.ticker import MaxNLocator, MultipleLocator
 
-    size_of_fonts = 16
+    size_of_fonts = 14
 
     np.set_printoptions(precision=0)
     x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
@@ -121,7 +121,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     
-    plt.rcParams.update({'font.size': 18})
+    plt.rcParams.update({'font.size': 16})
 
     if log == True:
         plt.plot(x_axis, np.log(error), label="log of average scaled absolute error", alpha=1.0, color="#069AF3")
@@ -143,7 +143,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
     
     if dataset_name == "block" and search_rank == -1:
         plt.ylim(-6.0, -2.5)
-    plt.legend(loc="upper right")
+    # plt.legend(loc="upper right")
     
     # title of the file
     if similarity_measure == "ht":
@@ -158,7 +158,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
                 plt.title("ER: "+convert_rank_to_order(search_rank)+" eigenvalue")
             else:
                 if dataset_name == "synthetic_tester" or dataset_name == "multi_block_synthetic":
-                    plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue = "+str(true_eigval))
+                    plt.title(convert_rank_to_order(search_rank)+" eigenvalue = "+str(round(true_eigval,2)))
                 else:
                     plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     
