@@ -46,10 +46,14 @@ for i in range(num_blocks):
 						= flag*sample_block
 
 
-A = A+R
+plt.imshow(R)
+plt.colorbar()
+plt.show()
+plt.clf()
 
+A = A+R
 eigvals, eigvecs = np.linalg.eig(A)
-plt.plot(range(n), np.diag(eigvecs))
+plt.scatter(range(n), np.diag(eigvecs))
 plt.xlabel("indices")
 plt.ylabel("eigenvalues")
 plt.show()
