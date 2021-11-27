@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 from random import sample
 
-n = 15000
+n = 2500
 eps = 0.1
 
 A = np.ones((n,n))
@@ -54,7 +54,7 @@ print("generated the matrix, proceeding to compute eigenvalues")
 
 A = A+R
 eigvals, eigvecs = np.linalg.eig(A)
-plt.scatter(range(n), np.diag(eigvecs))
+plt.scatter(range(n), eigvals)
 plt.xlabel("indices")
 plt.ylabel("eigenvalues")
 plt.savefig("figures/plot_of_eigenvalues.pdf")
