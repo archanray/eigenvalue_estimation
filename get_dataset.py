@@ -8,6 +8,9 @@ from skimage import feature
 import numpy as np
 from sklearn.preprocessing import normalize
 from display_codes import display_image
+import matplotlib.pyplot as plt
+from random import sample
+import os
 
 def get_data(name):
     if name == "kong":
@@ -112,7 +115,6 @@ def get_data(name):
         return A, dataset_size
 
     if name == "multi_block_synthetic":
-        from random import sample
         n = 5000
         eps = 0.1
 
@@ -155,48 +157,89 @@ def get_data(name):
                     R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
                                 = flag*sample_block
         A = A+R
-        return A, n, 50, 1000
+        
+        eigvals, eigvecs = np.linalg.eig(A)
+        eigvals = np.real(eigvals)
+        eigvecs = np.real(eigvecs)
+
+        # save figures
+        foldername = "figures/matrices/"
+        if not os.path.isdir(foldername):
+            os.makedirs(foldername)
+        plt.imshow(A)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_matrix.pdf")
+        plt.clf()
+
+        plt.scatter(range(n), eigvals)
+        plt.savefig(foldername+name+"_eigvals.pdf")
+        plt.clf()
+
+        V = np.abs(eigvecs)
+        plt.imshow(V)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_eigvecs.pdf")
+        plt.clf()
+
+        SIP = V.T @ V
+        plt.imshow(SIP)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_abs_IP.pdf")
+        plt.clf()
+
+        return A, n, int(n/100), int(n/5)
 
     if name == "synthetic_tester":
         """
         uses a matrix with 1/eps^2 eigvals of size  +-eps*n and 1 eigenvalue of size +-n/2
         """
-        print("extracting eigenvectors")
-        dataset_size = 2500
-        A_p = np.random.random((dataset_size, dataset_size))
-        A_p = A_p @ A_p.T
-        A_p = A_p / np.max(A_p)
-        eigvals, eigvecs = np.linalg.eig(A_p)
-        # print(eigvals.shape)
-        # mask = np.random.random((dataset_size, dataset_size)) #< 0.2
-        # eigvecs = np.where(mask, 0*eigvecs, eigvecs)
-        # eigvecs = normalize(eigvecs, axis=0, norm="l2")
-        eigvecs[:,0] = (1/np.sqrt(dataset_size))*np.ones(dataset_size)
-        
-        print("extracting eigenvalues")
-        eigvals = (1e-6)*np.ones(dataset_size)
+        n = 5000
         eps = 0.1
-        small_eigs = eps*dataset_size
-        large_eig = dataset_size/2
-        lens = int(1/(eps**2))
-        ones = np.ones(lens)
-        all_small_eigs = ones*small_eigs
-        eigvals[0] = large_eig
-        eigvals[1:lens+1] = all_small_eigs
-        mask = np.random.random(dataset_size) < 0.5
-        eigvals = np.where(mask, -eigvals, eigvals)
-        print(eigvals)
-        eigvals_matrix = np.diag(eigvals)
+        L = list(eps*n*np.ones(100))
+        L = np.array([(n/2.0)] + L)
+        mask = np.random.random(101) < 0.5
+        L = np.where(mask, -1*L, L)
+        L = np.diag(L)
 
-        print("generating final matrix")
-        A = (eigvecs @ eigvals_matrix) @ eigvecs.T
+        V = np.random.random((n,101))
+        num = 0.4
+        mask = np.random.random((n,101)) < num
+        V = np.where(mask, 0*V, V)
+        I = (1/np.sqrt(n))*np.ones(n)
+        V[:,0] = I
 
-        # return A, dataset_size
+        Q, R= np.linalg.qr(V)
+        A = Q @ L @ Q.T
 
-        min_sample_size = int(dataset_size * 0.01)
-        max_sample_size = int(dataset_size * 0.2)
+        eigvals, eigvecs = np.linalg.eig(A)
+        eigvals = np.real(eigvals)
+        eigvecs = np.real(eigvecs)
 
-        return A, dataset_size, min_sample_size, max_sample_size
+        # save figures
+        foldername = "figures/matrices/"
+        if not os.path.isdir(foldername):
+            os.makedirs(foldername)
+        plt.imshow(A)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_matrix.pdf")
+        plt.clf()
+
+        plt.scatter(range(n), eigvals)
+        plt.savefig(foldername+name+"_eigvals.pdf")
+        plt.clf()
+
+        V = np.abs(eigvecs)
+        plt.imshow(V)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_eigvecs.pdf")
+        plt.clf()
+        
+        SIP = V.T @ V
+        plt.imshow(SIP)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_abs_IP.pdf")
+        plt.clf()
+        return A, n, int(n/100), int(n/5)
 
     if name == "random_equal_signs":
         """
@@ -213,7 +256,6 @@ def get_data(name):
         w[500:1501] = np.zeros(w[500:1501].shape) + np.random.rand(len(w[500:1501]))
 
         # plot eigenvalues
-        import matplotlib.pyplot as plt
         plt.plot(np.array(list(range(2000))), w)
         plt.xlabel("eigenvalue indices")
         plt.ylabel("eigenvalues")

@@ -63,14 +63,16 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 trials = 50
 similarity_measure = "default"#"tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "multi_block_synthetic"#"synthetic_tester" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
+dataset_name = "synthetic_tester"
+#"multi_block_synthetic", "synthetic_tester", "binary", 
+#"kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
 min_samples = 50
 if dataset_name == "arxiv":
     max_samples = 5000
 else:
     max_samples = 1000
-if dataset_name == "synthetic_tester":
-    max_samples = 500
+# if dataset_name == "synthetic_tester":
+#     max_samples = 500
 # uncomment for run saved instance
 # dataset_size = 5000
 # dataset_name = "kong" #"kong", "facebook", "arxiv", "block", "erdos"
