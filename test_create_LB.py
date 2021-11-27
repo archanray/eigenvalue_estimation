@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 from random import sample
 
-n = 2500
+n = 15000
 eps = 0.1
 
 A = np.ones((n,n))

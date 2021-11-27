@@ -63,8 +63,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 trials = 50
 similarity_measure = "tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-<<<<<<< HEAD
-dataset_name = "synthetic_tester" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
+dataset_name = "multi_block_synthetic"#"synthetic_tester" #"binary", "kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
 min_samples = 50
 if dataset_name == "arxiv":
     max_samples = 5000
@@ -74,9 +73,7 @@ if dataset_name == "synthetic_tester":
     max_samples = 500
 # uncomment for run saved instance
 # dataset_size = 5000
-=======
 dataset_name = "kong" #"kong", "facebook", "arxiv", "block", "erdos"
->>>>>>> 01bb3260635c6c259f8541543812733a72ad434b
 #################################################################################################
 
 ############################################# GRAB THE MATRICES #################################
@@ -118,7 +115,7 @@ tracked_percentile2 = []
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
 
-print(true_spectrum)
+# print(true_spectrum)
 
 # comment out if you dont want to rerun and use only pickles
 for i in tqdm(range(min_samples, max_samples, 10)):

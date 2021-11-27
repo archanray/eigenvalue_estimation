@@ -6,11 +6,8 @@ create/get dataset
 import skimage.io
 from skimage import feature
 import numpy as np
-<<<<<<< HEAD
 from sklearn.preprocessing import normalize
-=======
 from display_codes import display_image
->>>>>>> 01bb3260635c6c259f8541543812733a72ad434b
 
 def get_data(name):
     if name == "kong":
@@ -114,6 +111,51 @@ def get_data(name):
         
         return A, dataset_size
 
+    if name == "multi_block_synthetic":
+        n = 5000
+        eps = 0.1
+
+        A = np.ones((n,n))
+        num_blocks = round(1/(eps**2))
+        sample_block_sizes = round((eps**2)*n)
+
+        R = np.zeros_like(A)
+        Z = [-1, 1]
+
+        sample_block = np.ones((sample_block_sizes, sample_block_sizes))
+
+        block_start_row = []
+        block_end_row = []
+        block_start_col = []
+        block_end_col = []
+        start_row = 0
+        start_col = 0
+        for i in range(num_blocks):
+            block_start_row.append(start_row)
+            block_start_col.append(start_col)
+            start_row += sample_block_sizes
+            start_col += sample_block_sizes
+            block_end_row.append(start_row)
+            block_end_col.append(start_col)
+
+
+        row_id = 0
+        for i in range(num_blocks):
+            col_id = 0
+
+            for j in range(num_blocks):
+                q = int(np.unique(R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]])[-1])
+
+                if q == 0:
+                    flag = sample(Z,1)[-1]
+                    R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]] \
+                                = int(flag)*sample_block
+
+                    R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
+                                = flag*sample_block
+        A = A+R
+        return A, n
+
     if name == "synthetic_tester":
         """
         uses a matrix with 1/eps^2 eigvals of size  +-eps*n and 1 eigenvalue of size +-n/2
@@ -148,7 +190,7 @@ def get_data(name):
         print("generating final matrix")
         A = (eigvecs @ eigvals_matrix) @ eigvecs.T
 
-        return A, dataset_size
+        # return A, dataset_size
 
         min_sample_size = int(dataset_size * 0.01)
         max_sample_size = int(dataset_size * 0.2)

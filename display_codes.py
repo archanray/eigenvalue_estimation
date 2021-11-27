@@ -157,10 +157,10 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
             if dataset_name == "erdos":
                 plt.title("ER: "+convert_rank_to_order(search_rank)+" eigenvalue")
             else:
-                if dataset_name == "synthetic_tester":
+                if dataset_name == "synthetic_tester" or dataset_name == "multi_block_synthetic":
                     plt.title(similarity_measure+": "+convert_rank_to_order(search_rank)+" eigenvalue = "+str(true_eigval))
                 else:
-                plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
+                    plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
     
     # save the file
     if log == True:
