@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 from random import sample
 
-n = 15000
+n = 2500
 eps = 0.1
 
 A = np.ones((n,n))
@@ -56,7 +56,7 @@ A = A+R
 eigvals, eigvecs = np.linalg.eig(A)
 E = np.abs(eigvals)
 id_ = np.argmax(E)
-max_eigval = eigvals[id_]
+max_eigval = np.real(eigvals[id_])
 plt.scatter(range(n), eigvals)
 plt.xlabel("indices")
 plt.ylabel("eigenvalues")
