@@ -171,7 +171,85 @@ def get_data(name):
         plt.savefig(foldername+name+"_matrix.pdf")
         plt.clf()
 
-        plt.scatter(range(n), eigvals)
+        plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
+        plt.savefig(foldername+name+"_eigvals.pdf")
+        plt.clf()
+
+        V = np.abs(eigvecs)
+        plt.imshow(V)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_eigvecs.pdf")
+        plt.clf()
+
+        SIP = V.T @ V
+        plt.imshow(SIP)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_abs_IP.pdf")
+        plt.clf()
+
+        return A, n, int(n/100), int(n/5)
+
+    if name == "multi_block_outer":
+        n = 5000
+        eps = 0.1
+
+        A = np.ones((n,n))
+        num_blocks = round(1/(eps**2))
+        sample_block_sizes = round((eps**2)*n)
+
+        R = np.zeros_like(A)
+        Z = [-1, 1]
+
+        set_val = np.array([-1,1])
+
+        block_start_row = []
+        block_end_row = []
+        block_start_col = []
+        block_end_col = []
+        start_row = 0
+        start_col = 0
+        for i in range(num_blocks):
+            block_start_row.append(start_row)
+            block_start_col.append(start_col)
+            start_row += sample_block_sizes
+            start_col += sample_block_sizes
+            block_end_row.append(start_row)
+            block_end_col.append(start_col)
+
+
+        row_id = 0
+        for i in range(num_blocks):
+            col_id = 0
+
+            for j in range(num_blocks):
+                q = int(np.unique(R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]])[-1])
+
+                if q == 0:
+                    vec1 = np.random.choice(set_val, size=sample_block_sizes)
+                    vec2 = np.random.choice(set_val, size=sample_block_sizes)
+                    sample_block = np.outer(vec1, vec2)
+                    R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]] \
+                                = sample_block
+
+                    R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
+                                = sample_block.T
+        A = A+R
+        
+        eigvals, eigvecs = np.linalg.eig(A)
+        eigvals = np.real(eigvals)
+        eigvecs = np.real(eigvecs)
+
+        # save figures
+        foldername = "figures/matrices/"
+        if not os.path.isdir(foldername):
+            os.makedirs(foldername)
+        plt.imshow(A)
+        plt.colorbar()
+        plt.savefig(foldername+name+"_matrix.pdf")
+        plt.clf()
+
+        plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
+        plt.ylim((-250,250))
         plt.savefig(foldername+name+"_eigvals.pdf")
         plt.clf()
 
@@ -224,7 +302,7 @@ def get_data(name):
         plt.savefig(foldername+name+"_matrix.pdf")
         plt.clf()
 
-        plt.scatter(range(n), eigvals)
+        plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
         plt.savefig(foldername+name+"_eigvals.pdf")
         plt.clf()
 
