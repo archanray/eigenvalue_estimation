@@ -157,7 +157,7 @@ def display_precomputed_error(dataset_name, similarity_measure, error, dataset_s
             if dataset_name == "erdos":
                 plt.title("ER: "+convert_rank_to_order(search_rank)+" eigenvalue")
             else:
-                if dataset_name == "synthetic_tester" or dataset_name == "multi_block_synthetic":
+                if dataset_name == "synthetic_tester" or dataset_name == "multi_block_synthetic" or dataset_name == "multi_block_outer":
                     plt.title(convert_rank_to_order(search_rank)+" eigenvalue = "+str(round(true_eigval,2)))
                 else:
                     plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
