@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from random import sample
 import os
 
-def get_data(name):
+def get_data(name, eps=0.1, plot_mat=True):
     if name == "kong":
         imagedrawing = skimage.io.imread('donkeykong.tn768.png')
         display_image(imagedrawing)
@@ -116,7 +116,6 @@ def get_data(name):
 
     if name == "multi_block_synthetic":
         n = 5000
-        eps = 0.1
 
         A = np.ones((n,n))
         num_blocks = round(1/(eps**2))
@@ -163,35 +162,35 @@ def get_data(name):
         eigvecs = np.real(eigvecs)
 
         # save figures
-        foldername = "figures/matrices/"
-        if not os.path.isdir(foldername):
-            os.makedirs(foldername)
-        plt.imshow(A)
-        plt.colorbar()
-        plt.savefig(foldername+name+"_matrix.pdf")
-        plt.clf()
+        if plot_mat:
+            foldername = "figures/matrices/"
+            if not os.path.isdir(foldername):
+                os.makedirs(foldername)
+            plt.imshow(A)
+            plt.colorbar()
+            plt.savefig(foldername+name+"_matrix.pdf")
+            plt.clf()
 
-        plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
-        plt.savefig(foldername+name+"_eigvals.pdf")
-        plt.clf()
+            plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
+            plt.savefig(foldername+name+"_eigvals.pdf")
+            plt.clf()
 
-        V = np.abs(eigvecs)
-        plt.imshow(V)
-        plt.colorbar()
-        plt.savefig(foldername+name+"_eigvecs.pdf")
-        plt.clf()
+            V = np.abs(eigvecs)
+            plt.imshow(V)
+            plt.colorbar()
+            plt.savefig(foldername+name+"_eigvecs.pdf")
+            plt.clf()
 
-        SIP = V.T @ V
-        plt.imshow(SIP)
-        plt.colorbar()
-        plt.savefig(foldername+name+"_abs_IP.pdf")
-        plt.clf()
+            SIP = V.T @ V
+            plt.imshow(SIP)
+            plt.colorbar()
+            plt.savefig(foldername+name+"_abs_IP.pdf")
+            plt.clf()
 
         return A, n, int(n/100), int(n/5)
 
     if name == "multi_block_outer":
         n = 5000
-        eps = 0.1
 
         A = np.ones((n,n))
         num_blocks = round(1/(eps**2))
@@ -240,30 +239,31 @@ def get_data(name):
         eigvecs = np.real(eigvecs)
 
         # save figures
-        foldername = "figures/matrices/"
-        if not os.path.isdir(foldername):
-            os.makedirs(foldername)
-        plt.imshow(A)
-        plt.colorbar()
-        plt.savefig(foldername+name+"_matrix.pdf")
-        plt.clf()
+        if plot_mat:
+            foldername = "figures/matrices/"
+            if not os.path.isdir(foldername):
+                os.makedirs(foldername)
+            plt.imshow(A)
+            plt.colorbar()
+            plt.savefig(foldername+name+"_matrix.pdf")
+            plt.clf()
 
-        plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
-        plt.ylim((-250,250))
-        plt.savefig(foldername+name+"_eigvals.pdf")
-        plt.clf()
+            plt.scatter(range(n), eigvals, alpha=0.3, marker='o', s=2, edgecolors=None)
+            plt.ylim((-250,250))
+            plt.savefig(foldername+name+"_eigvals.pdf")
+            plt.clf()
 
-        V = np.abs(eigvecs)
-        plt.imshow(V)
-        plt.colorbar()
-        plt.savefig(foldername+name+"_eigvecs.pdf")
-        plt.clf()
+            V = np.abs(eigvecs)
+            plt.imshow(V)
+            plt.colorbar()
+            plt.savefig(foldername+name+"_eigvecs.pdf")
+            plt.clf()
 
-        SIP = V.T @ V
-        plt.imshow(SIP)
-        plt.colorbar()
-        plt.savefig(foldername+name+"_abs_IP.pdf")
-        plt.clf()
+            SIP = V.T @ V
+            plt.imshow(SIP)
+            plt.colorbar()
+            plt.savefig(foldername+name+"_abs_IP.pdf")
+            plt.clf()
 
         return A, n, int(n/100), int(n/5)
 
@@ -272,7 +272,7 @@ def get_data(name):
         uses a matrix with 1/eps^2 eigvals of size  +-eps*n and 1 eigenvalue of size +-n/2
         """
         n = 5000
-        eps = 0.1
+        
         L = list(eps*n*np.ones(100))
         L = np.array([(n/2.0)] + L)
         mask = np.random.random(101) < 0.5
