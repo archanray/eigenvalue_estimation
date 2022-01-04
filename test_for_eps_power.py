@@ -172,15 +172,21 @@ for pows in eps_pows:
         
         # run experiment trials        
         error_vals = []
+        # create the matrix 
+        matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
+        # get the true spectrum and the subset we are guning for
+        true_spectrum = np.real(np.linalg.eigvals(matrix))
+        true_spectrum.sort()
+        chosen_eig = true_spectrum[search_rank]
+        
         for j in range(trials):
-            # create the matrix 
-            matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
-            # print(n)
+            ## create the matrix 
+            # matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
 
-            # get the true spectrum and the subset we are guning for
-            true_spectrum = np.real(np.linalg.eigvals(matrix))
-            true_spectrum.sort()
-            chosen_eig = true_spectrum[search_rank]
+            # # get the true spectrum and the subset we are guning for
+            # true_spectrum = np.real(np.linalg.eigvals(matrix))
+            # true_spectrum.sort()
+            # chosen_eig = true_spectrum[search_rank]
 
             # compute the approximate eigenvalues
             min_eig_single_round = sample_eig_default(matrix, s, True, rankcheck=search_rank)
