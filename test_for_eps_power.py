@@ -155,7 +155,7 @@ steps = 10
 ################################### COMPUTE ERRORS AND EIGS #####################################
 # logging data-structures
 # set power of eps and loop around it
-eps_pows = [1.5, 2, 2.5, 3, 3.5]
+eps_pows = [1.5, 2, 2.5, 3]
 eps_means_per_round = []
 eps_percent1_per_round = []
 eps_percent2_per_round = []
@@ -178,7 +178,7 @@ for pows in eps_pows:
         true_spectrum = np.real(np.linalg.eigvals(matrix))
         true_spectrum.sort()
         chosen_eig = true_spectrum[search_rank]
-        
+
         for j in range(trials):
             ## create the matrix 
             # matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
