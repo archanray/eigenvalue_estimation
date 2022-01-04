@@ -32,39 +32,62 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 
 ######################################################################################
 # parameters to retrieve dataset
-trials = 50
+trials = 1#50
 similarity_measure = "default"
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "multi_block_outer"
 min_samples = 50
-max_samples = 1000
-
-
-
-true_mat, dataset_size, min_samples, max_samples = get_data(dataset_name, eps=local_eps, print_mat=False)
-# uncommment when running the full code
-true_spectrum = np.real(np.linalg.eigvals(true_mat))
-# uncomment when running from saved values
-# true_spectrum = np.zeros(len(true_mat))
-print(">>>>>>>>>loaded dataset>>>>>>>>")
-print("||A||_infty:", np.max(true_mat))
+max_samples = 60#1000
+steps = 10
 #################################################################################################
 
 ################################### COMPUTE ERRORS AND EIGS #####################################
 # logging data-structures
-sample_eigenvalues_scaled = []
-sample_eigenvalues_scaled_std = []
-tracked_errors = []
-tracked_errors_std = []
-tracked_percentile1 = []
-tracked_percentile2 = []
-true_spectrum.sort()
-chosen_eig = true_spectrum[search_rank]
+# set power of eps and loop around it
+eps_pows = [1.5, 2, 2.5, 3, 3.5]
+epses = np.array(len(eps_pows))
+eps_means_per_round = []
+eps_percent1_per_round = []
+eps_percent2_per_round = []
 
 # comment out if you dont want to rerun and use only pickles
-for i in tqdm(range(min_samples, max_samples, 10)):
-    eig_vals = []
-    error_vals = []
-    for j in range(trials):
-        # get eigenvalue
-        error_single_round = np.abs(min_eig_single_round - chosen_eig) / float(dataset_size)
+for pows in eps_pows:
+    print(pows)
+    error_val_means = []
+    percentile1 = []
+    percentile2 = []
+    for s in tqdm(range(min_samples, max_samples, steps)):
+        # compute the eps for the given s: s=1/eps^pows ==> eps = 1/s^{1/pows}
+        local_eps = 1 / (s ** (1/pows))
+        
+        # run experiment trials        
+        error_vals = []
+        for j in range(trials):
+            # create the matrix 
+            matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
+
+            # get the true spectrum and the subset we are guning for
+            true_spectrum = np.real(np.linalg.eigvals(matrix))
+            true_spectrum.sort()
+            chosen_eig = true_spectrum[search_rank]
+
+            # compute the approximate eigenvalues
+            min_eig_single_round = sample_eig_default(matrix, s, True, rankcheck=search_rank)
+            # compute the error this round
+            error_single_round = np.abs(min_eig_single_round - chosen_eig) / float(n)
+            error_vals.append(error_single_round)
+
+        # save the values for this specific s
+        error_val_means.append(np.mean(error_vals, 0))
+        percentile1.append(np.percentile(error_vals, 20, axis=0))
+        percentile2.append(np.percentile(error_vals, 80, axis=0))
+
+    # bookkeeping
+    eps_means_per_round.append(error_val_means)
+    eps_percent1_per_round.append(percentile1)
+    eps_percent2_per_round.append(percentile2)
+    epses[count] = pows
+
+# comment out if you dont want to rerun and use only pickles
+with open("pickle_files/multi_eps_new_pickles_"+dataset_name+".pkl", "wb") as pickle_file:
+    pickle.dump([eps_means_per_round, error_val_stds, min_samples, max_samples, steps, epses], pickle_file)
