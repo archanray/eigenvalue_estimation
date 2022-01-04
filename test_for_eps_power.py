@@ -45,7 +45,6 @@ steps = 10
 # logging data-structures
 # set power of eps and loop around it
 eps_pows = [1.5, 2, 2.5, 3, 3.5]
-epses = np.array(len(eps_pows))
 eps_means_per_round = []
 eps_percent1_per_round = []
 eps_percent2_per_round = []
@@ -86,8 +85,7 @@ for pows in eps_pows:
     eps_means_per_round.append(error_val_means)
     eps_percent1_per_round.append(percentile1)
     eps_percent2_per_round.append(percentile2)
-    epses[count] = pows
 
 # comment out if you dont want to rerun and use only pickles
 with open("pickle_files/multi_eps_new_pickles_"+dataset_name+".pkl", "wb") as pickle_file:
-    pickle.dump([eps_means_per_round, error_val_stds, min_samples, max_samples, steps, epses], pickle_file)
+    pickle.dump([eps_means_per_round, error_val_stds, min_samples, max_samples, steps, eps_pows], pickle_file)
