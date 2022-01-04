@@ -154,11 +154,16 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
 
                 if q == 0:
                     flag = sample(Z,1)[-1]
-                    R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]] \
-                                = int(flag)*sample_block
-
-                    R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
-                                = flag*sample_block
+                    try:
+                        R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]] \
+                                    = sample_block
+                    except:
+                        pass
+                    try:
+                        R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
+                                    = sample_block.T
+                    except:
+                        pass
         A = A+R
         
         eigvals, eigvecs = np.linalg.eig(A)
@@ -237,11 +242,16 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
                     vec1 = np.random.choice(set_val, size=sample_block_sizes)
                     vec2 = np.random.choice(set_val, size=sample_block_sizes)
                     sample_block = np.outer(vec1, vec2)
-                    R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]] \
-                                = sample_block
-
-                    R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
-                                = sample_block.T
+                    try:
+                        R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]] \
+                                    = sample_block
+                    except:
+                        pass
+                    try:
+                        R[block_start_row[j]:block_end_row[j], block_start_col[i]:block_end_col[i]] \
+                                    = sample_block.T
+                    except:
+                        pass
         A = A+R
         
         eigvals, eigvecs = np.linalg.eig(A)

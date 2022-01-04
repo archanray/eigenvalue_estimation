@@ -5,10 +5,121 @@ code to test different powers of epsilon
 import numpy as np
 import random
 from tqdm import tqdm
-from display_codes import display, display_precomputed_error
 from get_dataset import get_data
 from similarities import hyperbolic_tangent, thin_plane_spline
 import pickle
+import matplotlib.pyplot as plt
+import os
+from matplotlib.ticker import FormatStrFormatter
+from matplotlib.ticker import MaxNLocator, MultipleLocator
+
+def convert_rank_to_order(search_rank):
+    """
+    convert numbers to names (preordained and not ordinal replacements)
+    """
+    if search_rank == 0:
+        rank_name = "smallest"
+    if search_rank == 1:
+        rank_name = "second smallest"
+    if search_rank == 2:
+        rank_name = "third smallest"
+    if search_rank == 3:
+        rank_name = "fourth smallest"
+    if search_rank == -1:
+        rank_name = "largest"
+    if search_rank == -2:
+        rank_name = "second largest"
+    if search_rank == -3:
+        rank_name = "third largest"
+    if search_rank == -4:
+        rank_name = "fourth largest"
+
+    return rank_name
+
+def display_precomputed_error(dataset_name, plot_data):
+    """
+    display functions I need for visualization
+    """
+    eps_means_per_round = plot_data[0]
+    eps_percent1_per_round = plot_data[1]
+    eps_percent2_per_round = plot_data[2]
+    min_samples = plot_data[3]
+    max_samples = plot_data[4]
+    steps = plot_data[5]
+    eps_pows = plot_data[6]
+    dataset_size = plot_data[7]
+    search_ranks = plot_data[8]
+
+    np.set_printoptions(precision=2)
+    size_of_fonts = 14
+
+    np.set_printoptions(precision=0)
+    x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
+    x_axis = np.log(x_axis)
+
+    for search_rank in search_ranks:
+        plt.gcf().clear()
+        fig, ax = plt.subplots()
+
+        ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+        ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+        
+        plt.rcParams.update({'font.size': 16})
+
+        for pows in eps_pows:
+            pass
+        pass
+
+    if log == True:
+        plt.plot(x_axis, np.log(error), label="log of average scaled absolute error", alpha=1.0, color="#069AF3")
+    else:
+        plt.plot(x_axis, error, label="average absolute error", alpha=1.0, color="#069AF3")
+    if percentile1 == []:
+        plt.fill_between(x_axis, np.log(error-error_std), np.log(error+error_std), alpha=0.2, color="#069AF3")
+        plt.ylabel("Log of average scaled absolute error")
+        pass
+    else:
+        if log == True:
+            plt.fill_between(x_axis, np.log(percentile1), np.log(percentile2), alpha=0.2, color="#069AF3")
+            plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
+        else:
+            plt.fill_between(x_axis, percentile1, percentile2, alpha=0.2, color="#069AF3")
+            plt.ylabel("average scaled absolute error of eigenvalue estimates")
+
+    plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
+    
+    if dataset_name == "block" and search_rank == -1:
+        plt.ylim(-6.0, -2.5)
+    # plt.legend(loc="upper right")
+    
+    # title of the file
+    if similarity_measure == "ht":
+        plt.title("Hyperbolic: "+convert_rank_to_order(search_rank)+" eigenvalue")
+    if similarity_measure == "tps":
+        plt.title("TPS: "+convert_rank_to_order(search_rank)+" eigenvalue")
+    if similarity_measure == "default":
+        if dataset_name == "arxiv":
+            plt.title("ArXiv: "+convert_rank_to_order(search_rank)+" eigenvalue")
+        else:
+            if dataset_name == "erdos":
+                plt.title("ER: "+convert_rank_to_order(search_rank)+" eigenvalue")
+            else:
+                if dataset_name == "synthetic_tester" or dataset_name == "multi_block_synthetic" or dataset_name == "multi_block_outer":
+                    plt.title(convert_rank_to_order(search_rank)+" eigenvalue = "+str(round(true_eigval,2)))
+                else:
+                    plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
+    
+    # save the file
+    if log == True:
+        filename = "./figures/"+dataset_name+"/errors/"
+    else:
+        filename = "./figures/"+dataset_name+"/non_log_errors/"
+    if not os.path.isdir(filename):
+        os.makedirs(filename)
+    filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"
+    plt.savefig(filename)
+    
+    return None
 
 def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
     """
@@ -32,12 +143,12 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
 
 ######################################################################################
 # parameters to retrieve dataset
-trials = 1#50
+trials = 50
 similarity_measure = "default"
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "multi_block_outer"
 min_samples = 50
-max_samples = 60#1000
+max_samples = 1000
 steps = 10
 #################################################################################################
 
@@ -89,4 +200,5 @@ for pows in eps_pows:
 
 # comment out if you dont want to rerun and use only pickles
 with open("pickle_files/multi_eps_new_pickles_"+dataset_name+".pkl", "wb") as pickle_file:
-    pickle.dump([eps_means_per_round, error_val_stds, min_samples, max_samples, steps, eps_pows], pickle_file)
+    pickle.dump([eps_means_per_round, eps_percent1_per_round, \
+                    eps_percent2_per_round, min_samples, max_samples, steps, eps_pows, n, search_rank], pickle_file)
