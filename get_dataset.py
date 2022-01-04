@@ -150,7 +150,10 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
             col_id = 0
 
             for j in range(num_blocks):
-                q = int(np.unique(R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]])[-1])
+                try:
+                    q = int(np.unique(R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]])[-1])
+                except:
+                    q = 0
 
                 if q == 0:
                     flag = sample(Z,1)[-1]
@@ -236,7 +239,10 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
             col_id = 0
 
             for j in range(num_blocks):
-                q = int(np.unique(R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]])[-1])
+                try:
+                    q = int(np.unique(R[block_start_row[i]:block_end_row[i], block_start_col[j]:block_end_col[j]])[-1])
+                except:
+                    q = 0
 
                 if q == 0:
                     vec1 = np.random.choice(set_val, size=sample_block_sizes)
