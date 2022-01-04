@@ -64,6 +64,7 @@ for pows in eps_pows:
         for j in range(trials):
             # create the matrix 
             matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
+            print(n)
 
             # get the true spectrum and the subset we are guning for
             true_spectrum = np.real(np.linalg.eigvals(matrix))

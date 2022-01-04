@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from random import sample
 import os
 
-def get_data(name, eps=0.1, plot_mat=True):
+def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
     if name == "kong":
         imagedrawing = skimage.io.imread('donkeykong.tn768.png')
         display_image(imagedrawing)
@@ -118,8 +118,12 @@ def get_data(name, eps=0.1, plot_mat=True):
         n = 5000
 
         A = np.ones((n,n))
-        num_blocks = round(1/(eps**2))
-        sample_block_sizes = round((eps**2)*n)
+        if raise_eps == False:
+            num_blocks = round(1/(eps))
+            sample_block_sizes = round((eps)*n)
+        else:
+            num_blocks = round(1/(eps**2))
+            sample_block_sizes = round((eps**2)*n)
 
         R = np.zeros_like(A)
         Z = [-1, 1]
@@ -193,8 +197,14 @@ def get_data(name, eps=0.1, plot_mat=True):
         n = 5000
 
         A = np.ones((n,n))
-        num_blocks = round(1/(eps**2))
-        sample_block_sizes = round((eps**2)*n)
+        
+        if raise_eps == False:
+            num_blocks = round(1/(eps))
+            sample_block_sizes = round((eps)*n)
+        else:
+            num_blocks = round(1/(eps**2))
+            sample_block_sizes = round((eps**2)*n)
+
 
         R = np.zeros_like(A)
         Z = [-1, 1]
