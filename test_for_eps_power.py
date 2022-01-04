@@ -12,34 +12,14 @@ import matplotlib.pyplot as plt
 import os
 from matplotlib.ticker import FormatStrFormatter
 from matplotlib.ticker import MaxNLocator, MultipleLocator
-
-def convert_rank_to_order(search_rank):
-    """
-    convert numbers to names (preordained and not ordinal replacements)
-    """
-    if search_rank == 0:
-        rank_name = "smallest"
-    if search_rank == 1:
-        rank_name = "second smallest"
-    if search_rank == 2:
-        rank_name = "third smallest"
-    if search_rank == 3:
-        rank_name = "fourth smallest"
-    if search_rank == -1:
-        rank_name = "largest"
-    if search_rank == -2:
-        rank_name = "second largest"
-    if search_rank == -3:
-        rank_name = "third largest"
-    if search_rank == -4:
-        rank_name = "fourth largest"
-
-    return rank_name
+from display_codes import convert_rank_to_order
 
 def display_precomputed_error(dataset_name, plot_data):
     """
     display functions I need for visualization
     """
+    color_palette = \
+            ["#FF796C", "#9ACD32", "#06C2AC", "#069AF3", "#DAA520", "#4B0082", "#C875C4"]
     eps_means_per_round = plot_data[0]
     eps_percent1_per_round = plot_data[1]
     eps_percent2_per_round = plot_data[2]
@@ -57,7 +37,7 @@ def display_precomputed_error(dataset_name, plot_data):
     x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
     x_axis = np.log(x_axis)
 
-    for search_rank in search_ranks:
+    for r in range(len(search_ranks)):
         plt.gcf().clear()
         fig, ax = plt.subplots()
 
@@ -66,58 +46,36 @@ def display_precomputed_error(dataset_name, plot_data):
         
         plt.rcParams.update({'font.size': 16})
 
-        for pows in eps_pows:
-            pass
-        pass
+        for i in range(len(eps_pows)):
+            # get the data from the savelog
+            tracked_error_means = np.array(eps_means_per_round[i])
+            tracked_percentile1 = np.array(eps_percent1_per_round[i])
+            tracked_percentile2 = np.array(eps_percent2_per_round[i])
 
-    if log == True:
-        plt.plot(x_axis, np.log(error), label="log of average scaled absolute error", alpha=1.0, color="#069AF3")
-    else:
-        plt.plot(x_axis, error, label="average absolute error", alpha=1.0, color="#069AF3")
-    if percentile1 == []:
-        plt.fill_between(x_axis, np.log(error-error_std), np.log(error+error_std), alpha=0.2, color="#069AF3")
-        plt.ylabel("Log of average scaled absolute error")
-        pass
-    else:
-        if log == True:
-            plt.fill_between(x_axis, np.log(percentile1), np.log(percentile2), alpha=0.2, color="#069AF3")
-            plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
-        else:
-            plt.fill_between(x_axis, percentile1, percentile2, alpha=0.2, color="#069AF3")
-            plt.ylabel("average scaled absolute error of eigenvalue estimates")
+            error_means = tracked_error_means[:, r]
+            error_p1 = tracked_percentile1[:,r]
+            error_p2 = tracked_percentile2[:,r]
 
-    plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
+            c = color_palette[i]
+            # finally plot this!
+            plt.plot(x_axis, np.log(error_means), \
+                label="eps^"+str(eps_pows[i]), alpha=1.0, color=c)
+            plt.fill_between(x_axis, np.log(error_p1), np.log(error_p2), alpha=0.2, color=c)
+        
+        plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
+        plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
     
-    if dataset_name == "block" and search_rank == -1:
-        plt.ylim(-6.0, -2.5)
-    # plt.legend(loc="upper right")
+        # title of the file
+        plt.title("Comparison of errors for "+\
+            convert_rank_to_order(search_ranks[r])+" eigenvalue", fontsize=size_of_fonts)
+        plt.legend(loc="upper right", fontsize=0.7*size_of_fonts)
     
-    # title of the file
-    if similarity_measure == "ht":
-        plt.title("Hyperbolic: "+convert_rank_to_order(search_rank)+" eigenvalue")
-    if similarity_measure == "tps":
-        plt.title("TPS: "+convert_rank_to_order(search_rank)+" eigenvalue")
-    if similarity_measure == "default":
-        if dataset_name == "arxiv":
-            plt.title("ArXiv: "+convert_rank_to_order(search_rank)+" eigenvalue")
-        else:
-            if dataset_name == "erdos":
-                plt.title("ER: "+convert_rank_to_order(search_rank)+" eigenvalue")
-            else:
-                if dataset_name == "synthetic_tester" or dataset_name == "multi_block_synthetic" or dataset_name == "multi_block_outer":
-                    plt.title(convert_rank_to_order(search_rank)+" eigenvalue = "+str(round(true_eigval,2)))
-                else:
-                    plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
-    
-    # save the file
-    if log == True:
-        filename = "./figures/"+dataset_name+"/errors/"
-    else:
-        filename = "./figures/"+dataset_name+"/non_log_errors/"
-    if not os.path.isdir(filename):
-        os.makedirs(filename)
-    filename = filename+similarity_measure+"_"+str(search_rank)+".pdf"
-    plt.savefig(filename)
+        # save the file
+        filename = "./figures/"+dataset_name+"_eps_varied"+"/errors/"
+        if not os.path.isdir(filename):
+            os.makedirs(filename)
+        filename = filename+"_"+str(search_ranks[r])+".pdf"
+        plt.savefig(filename)
     
     return None
 
@@ -141,70 +99,91 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0):
     else:
         return n*min_eig/float(s)
 
-######################################################################################
-# parameters to retrieve dataset
-trials = 50
-similarity_measure = "default"
-search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "multi_block_outer"
-min_samples = 50
-max_samples = 1000
-steps = 10
-#################################################################################################
-
 ################################### COMPUTE ERRORS AND EIGS #####################################
-# logging data-structures
-# set power of eps and loop around it
-eps_pows = [1.5, 2, 2.5, 3]
-eps_means_per_round = []
-eps_percent1_per_round = []
-eps_percent2_per_round = []
+def run_all(x):
+    # logging data-structures
+    # set power of eps and loop around it
+    eps_means_per_round = []
+    eps_percent1_per_round = []
+    eps_percent2_per_round = []
 
-# comment out if you dont want to rerun and use only pickles
-for pows in eps_pows:
-    print(pows)
-    error_val_means = []
-    percentile1 = []
-    percentile2 = []
-    for s in tqdm(range(min_samples, max_samples, steps)):
-        # compute the eps for the given s: s=1/eps^pows ==> eps = 1/s^{1/pows}
-        local_eps = 1 / (s ** (1/pows))
-        
-        # run experiment trials        
-        error_vals = []
-        # create the matrix 
-        matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
-        # get the true spectrum and the subset we are guning for
-        true_spectrum = np.real(np.linalg.eigvals(matrix))
-        true_spectrum.sort()
-        chosen_eig = true_spectrum[search_rank]
+    # comment out if you dont want to rerun and use only pickles
+    for pows in x.eps_pows:
+        print(pows)
+        error_val_means = []
+        percentile1 = []
+        percentile2 = []
+        for s in tqdm(range(x.min_samples, x.max_samples, x.steps)):
+            # compute the eps for the given s: s=1/eps^pows ==> eps = 1/s^{1/pows}
+            local_eps = 1 / (s ** (1/pows))
+            
+            # run experiment trials        
+            error_vals = []
+            # create the matrix 
+            matrix, n, _, _ = get_data(x.dataset_name, eps=local_eps, plot_mat=False)
+            # get the true spectrum and the subset we are guning for
+            true_spectrum = np.real(np.linalg.eigvals(matrix))
+            true_spectrum.sort()
+            chosen_eig = true_spectrum[search_rank]
 
-        for j in range(trials):
-            ## create the matrix 
-            # matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
+            for j in range(trials):
+                ## create the matrix 
+                # matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
 
-            # # get the true spectrum and the subset we are guning for
-            # true_spectrum = np.real(np.linalg.eigvals(matrix))
-            # true_spectrum.sort()
-            # chosen_eig = true_spectrum[search_rank]
+                # # get the true spectrum and the subset we are guning for
+                # true_spectrum = np.real(np.linalg.eigvals(matrix))
+                # true_spectrum.sort()
+                # chosen_eig = true_spectrum[search_rank]
 
-            # compute the approximate eigenvalues
-            min_eig_single_round = sample_eig_default(matrix, s, True, rankcheck=search_rank)
-            # compute the error this round
-            error_single_round = np.abs(min_eig_single_round - chosen_eig) / float(n)
-            error_vals.append(error_single_round)
+                # compute the approximate eigenvalues
+                min_eig_single_round = \
+                    sample_eig_default(matrix, s, True, rankcheck=x.search_rank)
+                # compute the error this round
+                error_single_round = np.abs(min_eig_single_round - chosen_eig) / float(n)
+                error_vals.append(error_single_round)
 
-        # save the values for this specific s
-        error_val_means.append(np.mean(error_vals, 0))
-        percentile1.append(np.percentile(error_vals, 20, axis=0))
-        percentile2.append(np.percentile(error_vals, 80, axis=0))
+            # save the values for this specific s
+            error_val_means.append(np.mean(error_vals, 0))
+            percentile1.append(np.percentile(error_vals, 20, axis=0))
+            percentile2.append(np.percentile(error_vals, 80, axis=0))
 
-    # bookkeeping
-    eps_means_per_round.append(error_val_means)
-    eps_percent1_per_round.append(percentile1)
-    eps_percent2_per_round.append(percentile2)
+        # bookkeeping
+        eps_means_per_round.append(error_val_means)
+        eps_percent1_per_round.append(percentile1)
+        eps_percent2_per_round.append(percentile2)
 
-# comment out if you dont want to rerun and use only pickles
-with open("pickle_files/multi_eps_new_pickles_"+dataset_name+".pkl", "wb") as pickle_file:
-    pickle.dump([eps_means_per_round, eps_percent1_per_round, \
-                    eps_percent2_per_round, min_samples, max_samples, steps, eps_pows, n, search_rank], pickle_file)
+    with open("pickle_files/multi_eps_new_pickles_"+x.dataset_name+".pkl", "wb") as pickle_file:
+        pickle.dump([eps_means_per_round, eps_percent1_per_round, \
+                        eps_percent2_per_round, x.min_samples, \
+                        x.max_samples, x.steps, x.eps_pows, n, x.search_rank], pickle_file)
+
+    return None
+
+################################ LOAD PRECOMPUTED DATA AND PLOT ##############################
+def plot_only(x):
+    with open("pickle_files/multi_eps_new_pickles_"+x.dataset_name+".pkl", "rb") as pickle_file:
+        plot_data = pickle.load(pickle_file)
+    display_precomputed_error(x.dataset_name, plot_data)
+    return None
+
+##############################################################################################
+# parameters to retrieve dataset
+class Variables:
+    def __init__(self):
+        self.trials = 50
+        self.search_rank = [0,1,2,3,-4,-3,-2,-1]
+        self.dataset_name = "multi_block_outer"
+        self.min_samples = 50
+        self.max_samples = 1000
+        self.steps = 10
+        self.eps_pows = [1.5, 2, 2.5, 3]
+        self.run_mode = "plot"
+
+runner = Variables()
+
+if runner.run_mode == "plot":
+    plot_only(runner)
+
+if runner.run_mode == "full":
+    run_all(runner)
+#################################################################################################
