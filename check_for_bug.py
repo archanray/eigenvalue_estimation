@@ -17,7 +17,7 @@ s = 100
 n = len(A)
 list_of_available_indices = range(n)
 
-runs = 100
+runs = 1
 results = []
 im_vals = np.zeros((runs, A.shape[0]))
 for i in tqdm(range(runs)):
@@ -49,6 +49,7 @@ plt.hist(results)
 plt.savefig("figures/bug_check/bug_hist.pdf")
 
 plt.gcf().clear()
-plt.imshow(im_vals)
-plt.colorbar()
+#plt.imshow(im_vals)
+#plt.colorbar()
+plt.plot(im_vals)
 plt.savefig("figures/bug_check/imag_vals.pdf")
