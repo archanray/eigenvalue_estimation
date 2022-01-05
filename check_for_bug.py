@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from numpy.lib.scimath import sqrt as csqr
+# from numpy.lib.scimath import sqrt as csqr
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from scipy.linalg import sqrtm
@@ -9,7 +9,7 @@ from scipy.linalg import sqrtm
 #A = np.random.random((2000, 2000))
 #A = (A + A.T) / 2
 n = 1000
-A = np.random.randint(-1,2, (n,n))
+A = 2*np.random.randint(1,3, (n,n))-3
 A = A - np.tril(A, -1) + np.triu(A,1).T
 
 L, V = np.linalg.eig(A)
@@ -25,18 +25,19 @@ list_of_available_indices = range(n)
 runs = 1
 results = []
 im_vals = np.zeros((runs, A.shape[0]))
+
 for i in tqdm(range(runs)):
 	# choose samples
 	sample_indices = np.sort(random.sample(list_of_available_indices, s))
 
 	# compute B_sample
-	STB = B[sample_indices]
+	STB = B[sample_indices,:]
 
 	alpha = 1000#2*np.random.random()-1
 	beta = -500#2*np.random.random()-1
 
-	C = alpha * BTB + beta * (STB.T @ STB)
-	eigvals, eigvecs = np.linalg.eig(C)
+	C = alpha * (n/s) * BTB + beta * (STB.T @ STB)
+	eigvals = np.linalg.eigvals(C)
 	
 	im_vals[i, :] = eigvals.imag
 	# print(eigvals)
