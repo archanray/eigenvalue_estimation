@@ -177,7 +177,7 @@ class Variables:
         self.max_samples = 1000
         self.steps = 10
         self.eps_pows = [1.5, 2, 2.5, 3, 3.5, 4]
-        self.run_mode = "plot"
+        self.run_mode = "full"
 
 runner = Variables()
 
