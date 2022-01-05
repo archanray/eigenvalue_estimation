@@ -3,22 +3,23 @@ import random
 from numpy.lib.scimath import sqrt as csqr
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from scipy.linalg import sqrtm
 
 # generate a random symmetric matrix
 #A = np.random.random((2000, 2000))
 #A = (A + A.T) / 2
-A = np.random.randint(-1,1, (2000,2000))
-A = A - np.tril(A, -1) + np.triu(A).T
+n = 1000
+A = np.random.randint(-1,2, (n,n))
+A = A - np.tril(A, -1) + np.triu(A,1).T
 
 L, V = np.linalg.eig(A)
-L = csqr(L)
-# L = np.expand_dims(L, axis=1)
 L = np.diag(L)
-B = V @ L
-BTB = B.T @ B
+L_h = sqrtm(L)
+#L_h = np.diag(L_h)
+B = V @ L_h
+BTB = L
 
 s = 100
-n = len(A)
 list_of_available_indices = range(n)
 
 runs = 1
@@ -37,22 +38,19 @@ for i in tqdm(range(runs)):
 	C = alpha * BTB + beta * (STB.T @ STB)
 	eigvals, eigvecs = np.linalg.eig(C)
 	
-	# print(im_vals[i,:].shape, eigvals.imag.shape)	
 	im_vals[i, :] = eigvals.imag
+	# print(eigvals)
 
 	if all(np.isreal(eigvals)):
 		results.append(1)
 	else:
 		results.append(0)
 
-	
-
+plt.gcf().clear()
 plt.hist(results)
 # plt.show()
 plt.savefig("figures/bug_check/bug_hist.pdf")
 
 plt.gcf().clear()
-#plt.imshow(im_vals)
-#plt.colorbar()
 plt.plot(im_vals[0,:])
 plt.savefig("figures/bug_check/imag_vals.pdf")
