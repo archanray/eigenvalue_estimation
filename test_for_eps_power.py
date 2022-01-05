@@ -120,7 +120,7 @@ def run_all(x):
             # run experiment trials        
             error_vals = []
             # create the matrix 
-            matrix, n, _, _ = get_data(x.dataset_name, eps=local_eps, plot_mat=False)
+            matrix, n, _, _ = get_data(x.dataset_name, eps=local_eps, plot_mat=False, raise_eps=True)
             # get the true spectrum and the subset we are guning for
             true_spectrum = np.real(np.linalg.eigvals(matrix))
             true_spectrum.sort()
@@ -176,7 +176,7 @@ class Variables:
         self.min_samples = 50
         self.max_samples = 1000
         self.steps = 10
-        self.eps_pows = [1.5, 2, 2.5, 3]
+        self.eps_pows = [1.5, 2, 2.5, 3, 3.5, 4]
         self.run_mode = "plot"
 
 runner = Variables()
