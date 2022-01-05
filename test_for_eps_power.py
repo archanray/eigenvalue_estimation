@@ -126,7 +126,7 @@ def run_all(x):
             true_spectrum.sort()
             chosen_eig = true_spectrum[x.search_rank]
 
-            for j in range(trials):
+            for j in range(x.trials):
                 ## create the matrix 
                 # matrix, n, _, _ = get_data(dataset_name, eps=local_eps, plot_mat=False)
 

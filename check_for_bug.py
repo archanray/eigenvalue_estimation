@@ -5,13 +5,17 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 # generate a random symmetric matrix
-A = np.random.random((2000, 2000))
-A = (A + A.T) / 2
+#A = np.random.random((2000, 2000))
+#A = (A + A.T) / 2
+A = np.random.randint(-1,1, (2000,2000))
+A = A - np.tril(A, -1) + np.triu(A).T
 
 L, V = np.linalg.eig(A)
 L = csqr(L)
 # L = np.expand_dims(L, axis=1)
 L = np.diag(L)
+B = V @ L
+BTB = B.T @ B
 
 s = 100
 n = len(A)
@@ -24,14 +28,13 @@ for i in tqdm(range(runs)):
 	# choose samples
 	sample_indices = np.sort(random.sample(list_of_available_indices, s))
 
-	# compute B
-	B = V @ L
+	# compute B_sample
 	STB = B[sample_indices]
 
-	alpha = 1#2*np.random.random()-1
-	beta = -1#2*np.random.random()-1
+	alpha = 1000#2*np.random.random()-1
+	beta = -500#2*np.random.random()-1
 
-	C = alpha * (B.T @ B) + beta * (STB.T @ STB)
+	C = alpha * BTB + beta * (STB.T @ STB)
 	eigvals, eigvecs = np.linalg.eig(C)
 	
 	# print(im_vals[i,:].shape, eigvals.imag.shape)	
