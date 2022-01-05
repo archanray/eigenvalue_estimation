@@ -33,7 +33,7 @@ for i in tqdm(range(runs)):
 	C = alpha * (B.T @ B) + beta * (STB.T @ STB)
 	eigvals, eigvecs = np.linalg.eig(C)
 
-	if all(eigvals):
+	if all(np.isreal(eigvals)):
 		results.append(1)
 	else:
 		results.append(0)
