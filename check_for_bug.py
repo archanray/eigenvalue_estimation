@@ -28,8 +28,8 @@ for i in tqdm(range(runs)):
 	B = V @ L
 	STB = B[sample_indices]
 
-	alpha = 2*np.random.random()-1
-	beta = 2*np.random.random()-1
+	alpha = 1#2*np.random.random()-1
+	beta = -1#2*np.random.random()-1
 
 	C = alpha * (B.T @ B) + beta * (STB.T @ STB)
 	eigvals, eigvecs = np.linalg.eig(C)
