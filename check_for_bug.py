@@ -40,7 +40,6 @@ for i in tqdm(range(runs)):
 	eigvals = np.linalg.eigvals(C)
 	
 	im_vals[i, :] = eigvals.imag
-	# print(eigvals)
 
 	if all(np.isreal(eigvals)):
 		results.append(1)
