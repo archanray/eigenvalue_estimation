@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "test_for_eps_power.py", line 8, in <module>
+    from get_dataset import get_data
+  File "/home/ray/eigenvalue_estimation/get_dataset.py", line 6, in <module>
+    import skimage.io
+ModuleNotFoundError: No module named 'skimage'
