@@ -19,6 +19,7 @@ list_of_available_indices = range(n)
 
 runs = 100
 results = []
+im_vals = np.zeros((runs, A.shape[0]))
 for i in tqdm(range(runs)):
 	# choose samples
 	sample_indices = np.sort(random.sample(list_of_available_indices, s))
@@ -32,12 +33,22 @@ for i in tqdm(range(runs)):
 
 	C = alpha * (B.T @ B) + beta * (STB.T @ STB)
 	eigvals, eigvecs = np.linalg.eig(C)
+	
+	# print(im_vals[i,:].shape, eigvals.imag.shape)	
+	im_vals[i, :] = eigvals.imag
 
 	if all(np.isreal(eigvals)):
 		results.append(1)
 	else:
 		results.append(0)
 
+	
+
 plt.hist(results)
 # plt.show()
 plt.savefig("figures/bug_check/bug_hist.pdf")
+
+plt.gcf().clear()
+plt.imshow(im_vals)
+plt.colorbar()
+plt.savefig("figures/bug_check/imag_vals.pdf")
