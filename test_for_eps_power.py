@@ -124,7 +124,7 @@ def run_all(x):
             # get the true spectrum and the subset we are guning for
             true_spectrum = np.real(np.linalg.eigvals(matrix))
             true_spectrum.sort()
-            chosen_eig = true_spectrum[search_rank]
+            chosen_eig = true_spectrum[x.search_rank]
 
             for j in range(trials):
                 ## create the matrix 
