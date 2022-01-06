@@ -36,6 +36,7 @@ def display_precomputed_error(dataset_name, plot_data):
     np.set_printoptions(precision=0)
     x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
     x_axis = np.log(x_axis)
+    x_limit = np.argmin(x_axis <= -1.3)
 
     for r in range(len(search_ranks)):
         plt.gcf().clear()
@@ -58,9 +59,9 @@ def display_precomputed_error(dataset_name, plot_data):
 
             c = color_palette[i]
             # finally plot this!
-            plt.plot(x_axis, np.log(error_means), \
+            plt.plot(x_axis[:x_limit+1], np.log(error_means[:x_limit+1]), \
                 label="eps^"+str(eps_pows[i]), alpha=1.0, color=c)
-            plt.fill_between(x_axis, np.log(error_p1), np.log(error_p2), alpha=0.2, color=c)
+            plt.fill_between(x_axis[:x_limit+1], np.log(error_p1[:x_limit+1]), np.log(error_p2[:x_limit+1]), alpha=0.2, color=c)
         
         plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
         plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
@@ -120,7 +121,7 @@ def run_all(x):
             # run experiment trials        
             error_vals = []
             # create the matrix 
-            matrix, n, _, _ = get_data(x.dataset_name, eps=local_eps**2, plot_mat=False, raise_eps=False)
+            matrix, n, _, _ = get_data(x.dataset_name, eps=local_eps, plot_mat=False, raise_eps=True)
             # get the true spectrum and the subset we are guning for
             true_spectrum = np.real(np.linalg.eigvals(matrix))
             true_spectrum.sort()
