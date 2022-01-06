@@ -36,7 +36,7 @@ for i in tqdm(range(runs)):
 	alpha = 1000#2*np.random.random()-1
 	beta = -500#2*np.random.random()-1
 
-	C = alpha * (n/s) * BTB + beta * (STB.T @ STB)
+	C = beta * BTB + alpha * (n/s) * (STB.T @ STB)
 	eigvals = np.linalg.eigvals(C)
 	
 	im_vals[i, :] = eigvals.imag
