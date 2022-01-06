@@ -202,7 +202,7 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
         return A, n, int(n/100), int(n/5)
 
     if name == "multi_block_outer":
-        n = 5000
+        n = 1000
 
         A = np.ones((n,n))
         
