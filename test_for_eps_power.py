@@ -45,7 +45,7 @@ def display_precomputed_error(dataset_name, plot_data):
         ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
         ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
         
-        plt.rcParams.update({'font.size': 16})
+        plt.rcParams.update({'font.size': 14})
 
         for i in range(len(eps_pows)):
             # get the data from the savelog
