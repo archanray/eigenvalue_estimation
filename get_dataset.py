@@ -12,6 +12,22 @@ import matplotlib.pyplot as plt
 from random import sample
 import os
 
+def get_distance(X, Y):
+    """
+    fast euclidean distance computation:
+    X shape is n x features
+    """
+    num_test = X.shape[0]
+    num_train = Y.shape[0]
+    dists = np.zeros((num_test, num_train))
+    sum1 = np.sum(np.power(X,2), axis=1)
+    sum2 = np.sum(np.power(Y,2), axis=1)
+    sum3 = 2*np.dot(X, Y.T)
+    dists = sum1.reshape(-1,1) + sum2
+    dists = np.sqrt(dists - sum3)
+    dists = dists / np.max(dists)
+    return dists
+
 def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
     if name == "kong":
         imagedrawing = skimage.io.imread('donkeykong.tn768.png')
@@ -89,6 +105,33 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
         max_sample_size = int(dataset_size * 0.2)
 
         return A, dataset_size, min_sample_size, max_sample_size
+
+    if name == "deezer":
+        """
+        dataset: https://snap.stanford.edu/data/deezer_ego_nets.html
+        """
+        import pandas as pd
+        import networkx as nx
+        df = pd.read_csv('data/deezer_ego_nets.csv')
+        G = nx.from_pandas_edgelist(df, "id_1", "id_2")
+        A = nx.adjacency_matrix(G)
+        A = A.todense()
+
+        return A, len(A), 50, 2000
+
+    if name == "MNIST":
+        """
+        get MNIST dataset from: http://yann.lecun.com/exdb/mnist/
+        dataset: MNIST 10k
+        do pip install idx2numpy prior to this
+        """
+        import idx2numpy
+        file = 'data/t10k-images.idx3-ubyte'
+        arr = idx2numpy.convert_from_file(file)
+        # reshape images to vectors: the following line leads to array of size 10k x 784
+        arr = arr.reshape(arr.shape[0], arr.shape[1]*arr.shape[2])
+        A = get_distance(arr, arr)
+        return A, len(A), 50, 2000
 
     if name == "arxiv" or name == "facebook" or name == "erdos":
         """
