@@ -70,7 +70,7 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False, max_size=1000):
         return A, n, int(n/100), int(n/5)
 
   if name == "facebook":
-        data_file = "facebook_combined.txt" 
+        data_file = "./data/facebook_combined.txt" 
         # import networkx as nx
         g = nx.read_edgelist(data_file,create_using=nx.DiGraph(), nodetype = int)
         A = nx.adjacency_matrix(g)
@@ -323,7 +323,7 @@ trials = 50
 # similarity_measure = "default"#"tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_size = 5000
-dataset_name = "facebook"
+dataset_name = "erdos"
 # dataset_name = "erdos", "MNIST", "block", "facebook"
 name_adder = "norm_v_random"
 # sampling_modes = ["random_sample", "separate", "norm", "separate_norm"]
@@ -341,13 +341,13 @@ repeated_groups = unq[count > 1]
 unq = unq[count == 1]
 # print(unq.shape)
 # print(len(repeated_groups))
-
+"""
 # uncommment when running the full code
 true_spectrum = np.real(np.linalg.eigvals(true_mat))
 
 # uncomment when running from saved values
 # true_spectrum = np.zeros(len(true_mat))
-
+"""
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
 
@@ -356,8 +356,8 @@ tracked_errors = {}
 tracked_errors_std = {}
 tracked_percentile1 = {}
 tracked_percentile2 = {}
-true_spectrum.sort()
-chosen_eig = true_spectrum[search_rank]
+#true_spectrum.sort()
+#chosen_eig = true_spectrum[search_rank]
 norm = np.linalg.norm(true_mat, axis=1) / np.sum(np.linalg.norm(true_mat, axis=1))
 for m in sampling_modes:
     tracked_errors[m] = []
@@ -365,6 +365,13 @@ for m in sampling_modes:
     tracked_percentile1[m] = []
     tracked_percentile2[m] = []
 
+# plot row norms
+plt.hist(norm, density=True, bins=30)
+plt.xlabel("Data")
+plt.ylabel("Probability")
+plt.savefig("erdos_row_norm.pdf")
+
+"""
 # finally run the trials for multiple iterations
 for i in tqdm(range(min_samples, max_samples, 10)):
     eig_vals = {}
@@ -417,3 +424,4 @@ for i in range(len(search_rank)):
         percentile1=percentile1_rank, \
         percentile2=percentile2_rank, min_samples=min_samples, \
         true_eigval=true_spectrum[search_rank[i]], name_adder=name_adder)
+"""
