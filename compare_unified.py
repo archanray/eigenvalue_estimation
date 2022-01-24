@@ -366,10 +366,11 @@ for m in sampling_modes:
     tracked_percentile2[m] = []
 
 # plot row norms
-plt.hist(norm, density=True, bins=30)
+print(norm.shape)
+plt.hist(norm, density=False, bins=30)
 plt.xlabel("Data")
 plt.ylabel("Probability")
-plt.savefig("erdos_row_norm.pdf")
+plt.savefig(dataset_name+"_row_norm.pdf")
 
 """
 # finally run the trials for multiple iterations
