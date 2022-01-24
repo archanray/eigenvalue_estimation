@@ -96,7 +96,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0, mode="random_sa
         chosen_p = norm[sample_indices]
         subsample_matrix = data_matrix[sample_indices][:, sample_indices]
         # reweight using pj/s
-        sqrt_chosen_p = np.sqrt(chosen_p)/s
+        sqrt_chosen_p = np.sqrt(chosen_p/s)
         D = np.diag(sqrt_chosen_p)
         subsample_matrix = D @ subsample_matrix @ D
     
@@ -167,7 +167,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0, mode="random_sa
         chosen_p = norm[sample_indices]
         subsample_matrix = data_matrix[sample_indices][:, sample_indices]
         # compute Ds
-        sqrt_chosen_p = np.sqrt(chosen_p)/s
+        sqrt_chosen_p = np.sqrt(chosen_p/s)
         D = np.diag(sqrt_chosen_p)
         subsample_matrix = D @ subsample_matrix @ D
     
@@ -332,7 +332,7 @@ trials = 50
 # similarity_measure = "default"#"tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 max_size = 5000
-dataset_name = "erdos"
+dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook"
 name_adder = "norm_v_random"
 # sampling_modes = ["random_sample", "separate", "norm", "separate_norm"]
