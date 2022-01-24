@@ -96,7 +96,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0, mode="random_sa
         chosen_p = norm[sample_indices]
         subsample_matrix = data_matrix[sample_indices][:, sample_indices]
         # reweight using pj/s
-        sqrt_chosen_p = np.sqrt(chosen_p/s)
+        sqrt_chosen_p = np.sqrt(chosen_p*s)
         D = np.diag(sqrt_chosen_p)
         subsample_matrix = D @ subsample_matrix @ D
     
@@ -167,7 +167,7 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0, mode="random_sa
         chosen_p = norm[sample_indices]
         subsample_matrix = data_matrix[sample_indices][:, sample_indices]
         # compute Ds
-        sqrt_chosen_p = np.sqrt(chosen_p/s)
+        sqrt_chosen_p = np.sqrt(chosen_p*s)
         D = np.diag(sqrt_chosen_p)
         subsample_matrix = D @ subsample_matrix @ D
     
