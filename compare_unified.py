@@ -90,8 +90,15 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0, mode="random_sa
     n = len(data_matrix)
     list_of_available_indices = range(n)
     if mode == "random_sample":
-        sample_indices = np.sort(random.sample(list_of_available_indices, s))
+        norm = np.ones(len(data_matrix)) / n
+        # sample_indices = np.sort(random.sample(list_of_available_indices, s))
+        sample_indices = np.sort(np.random.choice(list_of_available_indices, size=s, replace=True, p=norm))
+        chosen_p = norm[sample_indices]
         subsample_matrix = data_matrix[sample_indices][:, sample_indices]
+        # reweight using pj/s
+        sqrt_chosen_p = np.sqrt(chosen_p)/s
+        D = np.diag(sqrt_chosen_p)
+        subsample_matrix = D @ subsample_matrix @ D
     
     if mode == "CUR":
         """
@@ -156,11 +163,13 @@ def sample_eig_default(data_matrix, s, scale=False, rankcheck=0, mode="random_sa
         	subsample_matrix = np.linalg.inv(C.T @ C + 1e-10*np.eye(len(C.T))) @ psi.T
 
     if mode == "norm":
-        sample_indices = np.sort(np.random.choice(list_of_available_indices, size=s, replace=False, p=norm))
+        sample_indices = np.sort(np.random.choice(list_of_available_indices, size=s, replace=True, p=norm))
         chosen_p = norm[sample_indices]
         subsample_matrix = data_matrix[sample_indices][:, sample_indices]
-
-        subsample_matrix = subsample_matrix / (s*chosen_p)
+        # compute Ds
+        sqrt_chosen_p = np.sqrt(chosen_p)/s
+        D = np.diag(sqrt_chosen_p)
+        subsample_matrix = D @ subsample_matrix @ D
     
     if mode == "separate":
         sample_row_indices = np.sort(random.sample(list_of_available_indices, s))
@@ -341,13 +350,13 @@ repeated_groups = unq[count > 1]
 unq = unq[count == 1]
 # print(unq.shape)
 # print(len(repeated_groups))
-"""
+#"""
 # uncommment when running the full code
 true_spectrum = np.real(np.linalg.eigvals(true_mat))
 
 # uncomment when running from saved values
 # true_spectrum = np.zeros(len(true_mat))
-"""
+#"""
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
 
@@ -356,9 +365,9 @@ tracked_errors = {}
 tracked_errors_std = {}
 tracked_percentile1 = {}
 tracked_percentile2 = {}
-#true_spectrum.sort()
-#chosen_eig = true_spectrum[search_rank]
-norm = np.linalg.norm(true_mat, axis=1) / np.sum(np.linalg.norm(true_mat, axis=1))
+true_spectrum.sort()
+chosen_eig = true_spectrum[search_rank]
+norm = np.linalg.norm(true_mat, axis=1)**2 / np.linalg.norm(true_mat)**2
 for m in sampling_modes:
     tracked_errors[m] = []
     tracked_errors_std[m] = []
@@ -370,9 +379,9 @@ print(norm.shape)
 plt.hist(norm, density=False, bins=30)
 plt.xlabel("Data")
 plt.ylabel("Probability")
-plt.savefig(dataset_name+"_row_norm.pdf")
+plt.savefig("./figures/"+dataset_name+"_row_norm.pdf")
 
-"""
+#"""
 # finally run the trials for multiple iterations
 for i in tqdm(range(min_samples, max_samples, 10)):
     eig_vals = {}
@@ -425,4 +434,4 @@ for i in range(len(search_rank)):
         percentile1=percentile1_rank, \
         percentile2=percentile2_rank, min_samples=min_samples, \
         true_eigval=true_spectrum[search_rank[i]], name_adder=name_adder)
-"""
+#"""
