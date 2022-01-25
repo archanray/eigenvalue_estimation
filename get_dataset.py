@@ -155,7 +155,10 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
 
         dataset_size = len(A)
         
-        return A, dataset_size
+        min_sample_size = int(dataset_size * 0.01)
+        max_sample_size = int(dataset_size * 0.2)
+        
+        return A, dataset_size, min_sample_size, max_sample_size
 
     if name == "multi_block_synthetic":
         n = 5000

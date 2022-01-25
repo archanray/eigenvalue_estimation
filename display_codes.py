@@ -6,6 +6,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+def disply_prob_histogram(norm, dataset_name):
+    np.set_printoptions(precision=2)
+    plt.hist(norm, density=False, bins=30)
+    plt.xlabel("Data")
+    plt.ylabel("Probability")
+    plt.savefig("./figures/"+dataset_name+"_row_norm.pdf")
+    return None
+
 def display_image(image):
     plt.gcf().clear()
     plt.rcParams.update({'font.size': 12})
@@ -203,4 +211,67 @@ def frobenius_error_disp(mean_errors, std_errors, dataset_name, min_samples, max
     filename = filename+"error.pdf"
     plt.savefig(filename)
 
+    return None
+
+# display precomputed error
+def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
+                              search_rank, max_samples, \
+                              percentile1=[], percentile2=[], min_samples=50, true_eigval=0,\
+                              name_adder="default"):
+    """
+    code help from Yimming Huang
+    """
+    np.set_printoptions(precision=2)
+                              # percentile1=[], percentile2=[], log=True, min_samples=50):
+    from matplotlib.ticker import FormatStrFormatter
+    from matplotlib.ticker import MaxNLocator, MultipleLocator
+
+    size_of_fonts = 14
+
+    np.set_printoptions(precision=0)
+    x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
+    x_axis = np.log(x_axis)
+
+    plt.gcf().clear()
+    fig, ax = plt.subplots()
+
+    if dataset_name == "erdos" and search_rank != -1:
+        ax.yaxis.set_major_locator(MultipleLocator(0.2))
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    
+    plt.rcParams.update({'font.size': 13})
+    number_of_plots = len(sampling_modes)
+    colormap = plt.cm.nipy_spectral
+    # colors = [colormap(i) for i in np.linspace(0, 1,number_of_plots)]
+    # print(colors)
+    # ax.set_prop_cycle('color', colors)
+    
+    for m in sampling_modes:
+        plt.plot(x_axis, np.log(error[m]), label="log of average scaled absolute error", alpha=1.0)
+        plt.fill_between(x_axis, np.log(percentile1[m]), np.log(percentile2[m]), alpha=0.2)
+        plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
+    plt.legend(sampling_modes)
+    plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
+
+    if dataset_name == "block" and search_rank == -1:
+        plt.ylim(-6.0, -2.5)
+    # plt.legend(loc="upper right")
+    
+    # title of the file
+    plt.title(dataset_name.capitalize()+": "+convert_rank_to_order(search_rank)+" eigenvalue")
+    
+    # save the file
+    if name_adder == "default":
+        filename = "./figures/"+dataset_name+"/errors/"
+    else:
+        filename = "./figures/"+dataset_name+"_"+name_adder+"/errors/"
+    if not os.path.isdir(filename):
+        os.makedirs(filename)
+    filename = filename+"_"+str(search_rank)+".pdf"
+    # uncomment to visualize file
+    #plt.show()
+    # uncomment to download file
+    plt.savefig(filename)
+    
     return None
