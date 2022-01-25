@@ -17,11 +17,11 @@ from get_dataset import get_data
 trials = 50
 # similarity_measure = "default"#"tps" #"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "facebook"
+dataset_name = "multi_block_outer"
 # dataset_name = "erdos", "MNIST", "block", "facebook"
 name_adder = "norm_v_random"
 # name_adder = "random"
-sampling_modes = ["random_sample"]
+sampling_modes = ["uniform random sample", "row norm sample"]
 
 # Get the dataset
 true_mat, dataset_size, min_samples, max_samples = get_data(dataset_name)
@@ -72,15 +72,17 @@ for i in tqdm(range(min_samples, max_samples, 10)):
     for j in range(trials):
         # for each trial, run on every modes get its eigenvalue
         for m in sampling_modes:
-            if m == "norm":
-                min_eig_single_round = sample_eig_default(true_mat, i, False, 
-                                                          rankcheck=search_rank, mode=m, norm=norm)
+            if m == "row norm sample":
+                min_eig_single_round = sample_eig_default(true_mat, i, False, \
+                                                          rankcheck=search_rank, \
+                                                          mode=m, norm=norm)
             else:
                 min_eig_single_round = sample_eig_default(true_mat, i, False,
                                                           rankcheck=search_rank,
                                                           mode=m)
             # get error this round
-            error_single_round = np.abs(min_eig_single_round - chosen_eig) / float(dataset_size)
+            error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
+                                float(dataset_size)
             # add to the local list
             eig_vals[m].append(min_eig_single_round)
             error_vals[m].append(error_single_round)
