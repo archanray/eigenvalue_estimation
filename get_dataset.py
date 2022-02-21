@@ -150,6 +150,7 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
             g = nx.read_edgelist(data_file,create_using=nx.DiGraph(), nodetype = int)
         A = nx.adjacency_matrix(g)
         A = A.todense()
+        A = np.asarray(A)
         if name == "facebook":
             A = A+A.T # symmetrizing as the original dataset is directed
 
@@ -248,7 +249,7 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
         return A, n, int(n/100), int(n/5)
 
     if name == "multi_block_outer":
-        n = 1000
+        n = 2000
 
         A = np.ones((n,n))
         

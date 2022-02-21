@@ -12,6 +12,7 @@ def hyperbolic_tangent(data1, data2, sigma=1):
     similarity_matrix = np.matrix(data1) * np.matrix(data2.T)
     similarity_matrix = (similarity_matrix / sigma) + 1.0
     similarity_matrix = np.tanh(similarity_matrix)
+    similarity_matrix = np.asarray(similarity_matrix)
     return similarity_matrix
 
 

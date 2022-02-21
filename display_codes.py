@@ -254,8 +254,8 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     plt.legend(sampling_modes)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
-    if dataset_name == "block" and search_rank == -1:
-        plt.ylim(-6.0, -2.5)
+    # if dataset_name == "block" and search_rank == -1:
+    #     plt.ylim(-6.0, -2.5)
     # plt.legend(loc="upper right")
     
     # title of the file
