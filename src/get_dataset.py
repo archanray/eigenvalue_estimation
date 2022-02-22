@@ -7,7 +7,7 @@ import skimage.io
 from skimage import feature
 import numpy as np
 from sklearn.preprocessing import normalize
-from display_codes import display_image
+from src.display_codes import display_image
 import matplotlib.pyplot as plt
 from random import sample
 import os

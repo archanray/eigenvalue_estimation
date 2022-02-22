@@ -8,11 +8,11 @@ from tqdm import tqdm
 import pickle
 import random
 import matplotlib.pyplot as plt
-from sampler import sample_eig_default
-from utils import get_distance
-from display_codes import display_combined_error, disply_prob_histogram
-from get_dataset import get_data
-from similarities import hyperbolic_tangent, thin_plane_spline
+from src.sampler import sample_eig_default
+from src.utils import get_distance
+from src.display_codes import display_combined_error, disply_prob_histogram
+from src.get_dataset import get_data
+from src.similarities import hyperbolic_tangent, thin_plane_spline
 
 # Parameters
 trials = 50

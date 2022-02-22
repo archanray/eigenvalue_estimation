@@ -6,11 +6,11 @@ main code and entry point for all experiments
 import numpy as np
 import random
 from tqdm import tqdm
-from display_codes import display, display_precomputed_error
-from get_dataset import get_data
-from similarities import hyperbolic_tangent, thin_plane_spline
+from src.display_codes import display, display_precomputed_error
+from src.get_dataset import get_data
+from src.similarities import hyperbolic_tangent, thin_plane_spline
 import pickle
-from sampler import sample_eig, sample_eig_default
+from src.sampler import sample_eig, sample_eig_default
 
 """
 future speed improvement:
