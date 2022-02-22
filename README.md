@@ -1,6 +1,8 @@
 This is the code repository for our paper on Sublinear Time Eigenvalue Approximation via Random Sampling.
 
-TODO: create a package for python using our methods and publish here.
+TODO: 
+1. offload every trial loops in a separate code which can be invoked from within any program to prepare for it to be deployed as a python package.
+2. create a package for python using our methods and publish here.
 
 ### Required Python packages and dependencies
 
