@@ -1,5 +1,7 @@
 This is the code repository for our paper on Sublinear Time Eigenvalue Approximation via Random Sampling.
 
+TODO: create a package for python using our methods and publish here.
+
 ### Required Python packages and dependencies
 
 We experimented in this version and do not expect this to fail in another version of python 3, but still do not guarantee stability in other versions of python packages.
