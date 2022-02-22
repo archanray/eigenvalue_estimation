@@ -15,7 +15,7 @@ We experimented in this version and do not expect this to fail in another versio
 
 ### Running instructions
 
-1. To run the approximation do `python main.py`.
+1. To run the approximation do `python main.py` for only `random uniform sampling`. To compare across methods like `row norm sampling`, `uniform random sampling` or `ratio of non zero elements per row sampling (nnz sampling)` use `compare_unified.py`.
 2. To change dataset change lines 64 and 66 accordingly in `main.py`.
 3. Display codes are in `display_codes.py`.
 4. Matlab demo code for a single eigenvalue is in `matlab_code.m`.
