@@ -17,11 +17,11 @@ from src.similarities import hyperbolic_tangent, thin_plane_spline
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "block"
+dataset_name = "arxiv"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
-name_adder = "norm_v_random_v_nnz"
+name_adder = "random_v_nnz"
 # name_adder = "random"
-sampling_modes = ["uniform random sample", "row norm sample", "row nnz sample"]
+sampling_modes = ["uniform random sample", "row nnz sample"]
 
 if dataset_name == "kong":
     similarity_measure = "ht" # "tps", "ht", 
