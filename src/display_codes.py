@@ -251,11 +251,14 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
         plt.plot(x_axis, np.log(error[m]), label="log of average scaled absolute error", alpha=1.0)
         plt.fill_between(x_axis, np.log(percentile1[m]), np.log(percentile2[m]), alpha=0.2)
         plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
-    plt.legend(sampling_modes)
+    if len(sampling_modes) == 1:
+        pass
+    else:
+        plt.legend(sampling_modes)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
-    # if dataset_name == "block" and search_rank == -1:
-    #     plt.ylim(-6.0, -2.5)
+    if dataset_name == "block" and search_rank == -1:
+        plt.ylim(-6.0, -2.5)
     # plt.legend(loc="upper right")
     
     # title of the file
