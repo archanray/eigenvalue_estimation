@@ -32,11 +32,13 @@ def sample_eig_default(data_matrix, s, scale=False, \
     """
     n = len(data_matrix)
     list_of_available_indices = range(n)
-    
+
     sample_indices = np.sort(np.random.choice(list_of_available_indices, \
         size=s, replace=True, p=norm))
     chosen_p = norm[sample_indices]
+    
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
+    
     # compute Ds
     if method != "sparsity sampler":
         sqrt_chosen_p = np.sqrt(chosen_p*s)
@@ -46,6 +48,7 @@ def sample_eig_default(data_matrix, s, scale=False, \
     subsample_matrix = D @ subsample_matrix @ D        
 
     if method == "sparsity sampler":
+        subsample_matrix = subsample_matrix - np.diag(np.diag(subsample_matrix))
         pipj = np.outer(chosen_p, chosen_p)
         mask = (pipj >= s/(1*nnzA)).astype(int)
         subsample_matrix = subsample_matrix*mask
