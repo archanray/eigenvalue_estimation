@@ -2,6 +2,10 @@ import numpy as np
 from src.sampler import sample_eig_default
 from tqdm import tqdm
 
+def modify_matrix_for_sparsity(true_mat):
+    true_mat = true_mat - np.diag(np.diag(true_mat))
+    return true_mat
+
 def approximator(sampling_modes, min_samples, max_samples, trials, \
                 true_mat, search_rank, chosen_eig, step=10):
     # details
@@ -17,9 +21,11 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
         unorm = np.ones(len(true_mat)) / len(true_mat)
     if "row norm sample" in sampling_modes:
         norm = np.linalg.norm(true_mat, axis=1)**2 / np.linalg.norm(true_mat)**2
-    if "row nnz sample" in sampling_modes:
+    if "row nnz sample" in sampling_modes or "sparsity sampler" in sampling_modes:
         nnz = np.count_nonzero(true_mat, axis=1, keepdims=False) / \
                                 np.count_nonzero(true_mat, keepdims=False)
+    if "sparsity sampler" in sampling_modes:
+        nnzA = np.count_nonzero(true_mat)
 
     # create more loggers
     for m in sampling_modes:
@@ -42,17 +48,21 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
             # for each trial, run on every modes get its eigenvalue
             for m in sampling_modes:
                 if m == "row norm sample":
-                    min_eig_single_round = sample_eig_default(true_mat, i, False, \
+                    min_eig_single_round = sample_eig_default(true_mat, i, scale=False, \
                                                               rankcheck=search_rank, \
-                                                              norm=norm)
+                                                              norm=norm, method=m)
                 if m == "row nnz sample":
-                    min_eig_single_round = sample_eig_default(true_mat, i, False, \
+                    min_eig_single_round = sample_eig_default(true_mat, i, scale=False, \
                                                               rankcheck=search_rank, \
-                                                              norm=nnz)
+                                                              norm=nnz, method=m)
                 if m == "uniform random sample":
-                    min_eig_single_round = sample_eig_default(true_mat, i, False,
+                    min_eig_single_round = sample_eig_default(true_mat, i, scale=False,
                                                               rankcheck=search_rank,
-                                                              norm=unorm)
+                                                              norm=unorm, method=m)
+                if m == "sparsity sampler":
+                    min_eig_single_round = sample_eig_default(true_mat, i, scale=False,
+                                                              rankcheck=search_rank,
+                                                              norm=unorm, nnzA=nnzA, method=m)
                 # get error this round
                 error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
                                     float(dataset_size)

@@ -24,7 +24,7 @@ def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
         
 # The eigenvalue estimator
 def sample_eig_default(data_matrix, s, scale=False, \
-                        rankcheck=0, norm=[]):
+                        rankcheck=0, norm=[], nnzA=0, method="uniform random sample"):
     """
     input: original matrix
     output: sample eigenvalue
@@ -38,9 +38,17 @@ def sample_eig_default(data_matrix, s, scale=False, \
     chosen_p = norm[sample_indices]
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
     # compute Ds
-    sqrt_chosen_p = np.sqrt(chosen_p*s)
+    if method != "sparsity sampler":
+        sqrt_chosen_p = np.sqrt(chosen_p*s)
+    else: 
+        sqrt_chosen_p = np.sqrt(chosen_p)
     D = np.diag(1 / sqrt_chosen_p)
     subsample_matrix = D @ subsample_matrix @ D        
+
+    if method == "sparsity sampler":
+        pipj = np.outer(chosen_p, chosen_p)
+        mask = (pipj >= s/(1*nnzA)).astype(int)
+        subsample_matrix = subsample_matrix*mask
     
     # useful for only hermitian matrices
     all_eig_val_estimates = np.real(np.linalg.eigvalsh(subsample_matrix))
