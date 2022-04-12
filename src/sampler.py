@@ -40,17 +40,20 @@ def sample_eig_default(data_matrix, s, scale=False, \
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
     
     # compute Ds
+    """
     if method != "sparsity sampler":
         sqrt_chosen_p = np.sqrt(chosen_p*s)
     else: 
         sqrt_chosen_p = np.sqrt(chosen_p)
+    """
+    sqrt_chosen_p = np.sqrt(chosen_p*s)
     D = np.diag(1 / sqrt_chosen_p)
     subsample_matrix = D @ subsample_matrix @ D        
 
     if method == "sparsity sampler":
         subsample_matrix = subsample_matrix - np.diag(np.diag(subsample_matrix))
         pipj = np.outer(chosen_p, chosen_p)
-        mask = (pipj >= s/(1*nnzA)).astype(int)
+        mask = (pipj >= s/(2000*nnzA)).astype(int) # assuming s \geq tilde{O}(1/epsilon**2)
         subsample_matrix = subsample_matrix*mask
     
     # useful for only hermitian matrices

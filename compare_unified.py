@@ -17,7 +17,7 @@ from src.similarities import hyperbolic_tangent, thin_plane_spline
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "erdos"
+dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
 name_adder = "random_nnz_sparse"
 # name_adder = "random"
@@ -58,6 +58,7 @@ print("||A||_infty:", np.max(true_mat))
 # set up output loggers
 true_spectrum.sort()
 chosen_eig = true_spectrum[search_rank]
+print("chosen eigs:", chosen_eig)
 
 # compute the errors
 tracked_errors, tracked_percentile1, tracked_percentile2 = approximator(\
