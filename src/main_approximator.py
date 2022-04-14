@@ -62,7 +62,7 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                 if m == "sparsity sampler":
                     min_eig_single_round = sample_eig_default(true_mat, i, scale=False,
                                                               rankcheck=search_rank,
-                                                              norm=unorm, nnzA=nnzA, method=m)
+                                                              norm=nnz, nnzA=nnzA, method=m, multiplier=500)
                 # get error this round
                 error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
                                     float(dataset_size)
