@@ -21,7 +21,7 @@ dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["row nnz sample", "sparsity sampler_1","sparsity sampler_100", "sparsity sampler_500", "sparsity sampler_1000", "sparsity sampler_2500", "sparsity sampler_5000", "sparsity sampler_10000", "sparsity sampler_25000", "sparsity sampler_50000"]
+sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_0.001", "sparsity sampler_0.01", "sparsity sampler_0.1", "sparsity sampler_1", "sparsity sampler_100"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 

@@ -53,7 +53,7 @@ def sample_eig_default(data_matrix, s, scale=False, \
     if "sparsity sampler" in method:
         subsample_matrix = subsample_matrix - np.diag(np.diag(subsample_matrix))
         pipj = np.outer(chosen_p, chosen_p)
-        mask = (pipj >= s/(multiplier*nnzA)).astype(int) # assuming s \geq tilde{O}(1/epsilon**2)
+        mask = (pipj >= 1/(s*multiplier*nnzA)).astype(int) # assuming s \geq tilde{O}(1/epsilon**2)
         subsample_matrix = subsample_matrix*mask
     
     # useful for only hermitian matrices

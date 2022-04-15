@@ -63,7 +63,7 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                                                               norm=unorm, method=m)
                 if "sparsity sampler" in m:
                     # split name and parameters to get the multiplier
-                    mult = int(m.split("_")[1])
+                    mult = float(m.split("_")[1])
                     min_eig_single_round = sample_eig_default(true_mat, i, scale=False,
                                                               rankcheck=search_rank,
                                                               norm=nnz, nnzA=nnzA, method=m, multiplier=mult)
