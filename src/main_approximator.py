@@ -68,7 +68,11 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                                                               rankcheck=search_rank,
                                                               norm=nnz, nnzA=nnzA, method=m, multiplier=mult)
                 # get error this round
-                error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
+                if "sparsity sampler" in m or m == "row nnz sample":
+                    error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
+                                    float(np.sqrt(nnzA))
+                else:
+                    error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
                                     float(dataset_size)
                 # add to the local list
                 eig_vals[m].append(min_eig_single_round)
