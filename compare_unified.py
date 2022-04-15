@@ -19,9 +19,9 @@ trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
-name_adder = "nnz_sparse"
+name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["row nnz sample", "sparsity sampler"]
+sampling_modes = ["row nnz sample", "sparsity sampler_1","sparsity sampler_100", "sparsity sampler_500", "sparsity sampler_1000", "sparsity sampler_2500", "sparsity sampler_5000", "sparsity sampler_10000", "sparsity sampler_25000", "sparsity sampler_50000"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 

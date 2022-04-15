@@ -15,7 +15,7 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
     tracked_errors_std = {}
     tracked_percentile1 = {}
     tracked_percentile2 = {}
-
+    
     # compute prob values for specific algorithms
     if "uniform random sample" in sampling_modes:
         unorm = np.ones(len(true_mat)) / len(true_mat)
@@ -24,7 +24,9 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
     if "row nnz sample" in sampling_modes or "sparsity sampler" in sampling_modes:
         nnz = np.count_nonzero(true_mat, axis=1, keepdims=False) / \
                                 np.count_nonzero(true_mat, keepdims=False)
-    if "sparsity sampler" in sampling_modes:
+    #if "sparsity sampler" in sampling_modes:
+    #    nnzA = np.count_nonzero(true_mat)
+    if any(i for i in sampling_modes if 'sparsity sampler' in i):
         nnzA = np.count_nonzero(true_mat)
 
     # create more loggers
@@ -59,10 +61,12 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                     min_eig_single_round = sample_eig_default(true_mat, i, scale=False,
                                                               rankcheck=search_rank,
                                                               norm=unorm, method=m)
-                if m == "sparsity sampler":
+                if "sparsity sampler" in m:
+                    # split name and parameters to get the multiplier
+                    mult = int(m.split("_")[1])
                     min_eig_single_round = sample_eig_default(true_mat, i, scale=False,
                                                               rankcheck=search_rank,
-                                                              norm=nnz, nnzA=nnzA, method=m, multiplier=500)
+                                                              norm=nnz, nnzA=nnzA, method=m, multiplier=mult)
                 # get error this round
                 error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
                                     float(dataset_size)

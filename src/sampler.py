@@ -50,7 +50,7 @@ def sample_eig_default(data_matrix, s, scale=False, \
     D = np.diag(1 / sqrt_chosen_p)
     subsample_matrix = D @ subsample_matrix @ D        
 
-    if method == "sparsity sampler":
+    if "sparsity sampler" in method:
         subsample_matrix = subsample_matrix - np.diag(np.diag(subsample_matrix))
         pipj = np.outer(chosen_p, chosen_p)
         mask = (pipj >= s/(multiplier*nnzA)).astype(int) # assuming s \geq tilde{O}(1/epsilon**2)

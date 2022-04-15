@@ -254,7 +254,7 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     if len(sampling_modes) == 1:
         pass
     else:
-        plt.legend(sampling_modes)
+        plt.legend(sampling_modes, fontsize=5)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
     if dataset_name == "block" and search_rank == -1:
