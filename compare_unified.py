@@ -15,13 +15,13 @@ from src.get_dataset import get_data
 from src.similarities import hyperbolic_tangent, thin_plane_spline
 
 # Parameters
-trials = 50
+trials = 10
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "facebook"
+dataset_name = "erdos"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_0.001", "sparsity sampler_0.01", "sparsity sampler_0.1", "sparsity sampler_1", "sparsity sampler_100"]
+sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_10"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 

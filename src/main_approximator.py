@@ -21,7 +21,7 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
         unorm = np.ones(len(true_mat)) / len(true_mat)
     if "row norm sample" in sampling_modes:
         norm = np.linalg.norm(true_mat, axis=1)**2 / np.linalg.norm(true_mat)**2
-    if "row nnz sample" in sampling_modes or "sparsity sampler" in sampling_modes:
+    if "row nnz sample" in sampling_modes or any(i for i in sampling_modes if 'sparsity sampler' in i):
         nnz = np.count_nonzero(true_mat, axis=1, keepdims=False) / \
                                 np.count_nonzero(true_mat, keepdims=False)
     #if "sparsity sampler" in sampling_modes:
