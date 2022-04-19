@@ -8,7 +8,7 @@ import pickle
 import random
 import matplotlib.pyplot as plt
 from src.main_approximator import approximator
-from src.viz import plot_all_errors
+from src.viz import plot_all_errors, plot_all_nnz
 from src.utils import get_distance
 from src.display_codes import disply_prob_histogram
 from src.get_dataset import get_data
@@ -21,7 +21,7 @@ dataset_name = "erdos"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_10"]
+sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_10", "sparsity sampler_0.1", "sparsity sampler_0.01", "sparsity sampler_1"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 
@@ -61,7 +61,7 @@ chosen_eig = true_spectrum[search_rank]
 print("chosen eigs:", chosen_eig)
 
 # compute the errors
-tracked_errors, tracked_percentile1, tracked_percentile2 = approximator(\
+tracked_errors, tracked_percentile1, tracked_percentile2, nnz_sm = approximator(\
             sampling_modes, min_samples, max_samples, trials, true_mat, search_rank, chosen_eig)
 
 # visualize the errors
@@ -69,3 +69,6 @@ plot_all_errors(tracked_errors, tracked_percentile1, tracked_percentile2, \
             sampling_modes, dataset_name, dataset_size, \
             search_rank, max_samples, min_samples, \
             true_spectrum, name_adder)
+
+# visualize non-zeros elements in the submatrix of the sparsity sampler
+plot_all_nnz(nnz_sm, sampling_modes, dataset_name)

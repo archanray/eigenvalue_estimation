@@ -39,13 +39,6 @@ def sample_eig_default(data_matrix, s, scale=False, \
     
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
     
-    # compute Ds
-    """
-    if method != "sparsity sampler":
-        sqrt_chosen_p = np.sqrt(chosen_p*s)
-    else: 
-        sqrt_chosen_p = np.sqrt(chosen_p)
-    """
     sqrt_chosen_p = np.sqrt(chosen_p*s)
     D = np.diag(1 / sqrt_chosen_p)
     subsample_matrix = D @ subsample_matrix @ D        
@@ -55,6 +48,7 @@ def sample_eig_default(data_matrix, s, scale=False, \
         pipj = np.outer(chosen_p, chosen_p)
         mask = (pipj >= 1/(s*multiplier*nnzA)).astype(int) # assuming s \geq tilde{O}(1/epsilon**2)
         subsample_matrix = subsample_matrix*mask
+        nnz_subsample_matrtix = np.count_nonzero(subsample_matrix)
     
     # useful for only hermitian matrices
     all_eig_val_estimates = np.real(np.linalg.eigvalsh(subsample_matrix))
@@ -62,6 +56,9 @@ def sample_eig_default(data_matrix, s, scale=False, \
 
     min_eig = np.array(all_eig_val_estimates)[rankcheck]
     if scale == False or "CUR" in mode:
-        return min_eig
+        if "sparsity sampler" in method:
+            return min_eig, nnz_subsample_matrtix
+        else:
+            return min_eig
     else:
         return n*min_eig/float(s)
