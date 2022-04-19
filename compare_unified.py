@@ -15,9 +15,9 @@ from src.get_dataset import get_data
 from src.similarities import hyperbolic_tangent, thin_plane_spline
 
 # Parameters
-trials = 10
+trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "erdos"
+dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
