@@ -81,7 +81,8 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                                     float(np.sqrt(nnzA))
                 else:
                     error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
-                                    float(dataset_size)
+                                    float(np.sqrt(nnzA))
+                                    # float(dataset_size)
                 # add to the local list
                 eig_vals[m].append(min_eig_single_round)
                 error_vals[m].append(error_single_round)

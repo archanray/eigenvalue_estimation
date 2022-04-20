@@ -8,16 +8,17 @@ import pickle
 import random
 import matplotlib.pyplot as plt
 from src.main_approximator import approximator
-from src.viz import plot_all_errors, plot_all_nnz
+from src.viz import plot_all_errors, plot_all_nnz, plot_eigval_vs_nnzA
 from src.utils import get_distance
 from src.display_codes import disply_prob_histogram
 from src.get_dataset import get_data
 from src.similarities import hyperbolic_tangent, thin_plane_spline
+from copy import copy
 
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "facebook"
+dataset_name = "erdos"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
@@ -52,6 +53,9 @@ true_spectrum = np.real(np.linalg.eigvals(true_mat))
 # uncomment when running from saved values
 # true_spectrum = np.zeros(len(true_mat))
 
+if any(i for i in sampling_modes if "sparsity sampler" in i):
+    plot_eigval_vs_nnzA(true_spectrum, np.count_nonzero(true_mat), dataset_name)
+
 print("loaded dataset")
 print("||A||_infty:", np.max(true_mat))
 
@@ -64,6 +68,20 @@ print("chosen eigs:", chosen_eig)
 tracked_errors, tracked_percentile1, tracked_percentile2, nnz_sm = approximator(\
             sampling_modes, min_samples, max_samples, trials, true_mat, search_rank, chosen_eig)
 
+if any(i for i in sampling_modes if "sparsity sampler" in i):
+    nom = "lambda_by_nnz"
+    sampling_modes.append(nom)
+    tracked_errors[nom] = []
+    tracked_percentile1[nom] = []
+    tracked_percentile2[nom] = []
+    len_samples = len(tracked_errors["uniform random sample"])
+    vals = np.array(abs(chosen_eig) / np.sqrt(np.count_nonzero(true_mat)))
+    vals = vals+1e-16
+    for i in range(len_samples):
+        tracked_errors[nom].append(vals)
+        tracked_percentile1[nom].append(vals)
+        tracked_percentile2[nom].append(vals)
+
 # visualize the errors
 plot_all_errors(tracked_errors, tracked_percentile1, tracked_percentile2, \
             sampling_modes, dataset_name, dataset_size, \
@@ -71,4 +89,4 @@ plot_all_errors(tracked_errors, tracked_percentile1, tracked_percentile2, \
             true_spectrum, name_adder)
 
 # visualize non-zeros elements in the submatrix of the sparsity sampler
-plot_all_nnz(nnz_sm, sampling_modes, dataset_name)
+plot_all_nnz(nnz_sm, sampling_modes, dataset_name, min_samples, max_samples)

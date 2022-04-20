@@ -27,13 +27,29 @@ def plot_all_errors(tracked_errors, tracked_percentile1, tracked_percentile2, \
             percentile1=percentile1_rank, \
             percentile2=percentile2_rank, min_samples=min_samples, \
             true_eigval=true_spectrum[search_rank[i]], name_adder=name_adder)
+    return None
 
 
-def plot_all_nnz(nnz_sm, sampling_modes, dataset_name):
+def plot_all_nnz(nnz_sm, sampling_modes, dataset_name, min_samples, max_samples, step=10):
     plt.gcf().clear()
+    x_axis = list(range(min_samples, max_samples, step))
     for m in sampling_modes:
         if "sparsity sampler" in m:
-            plt.plot(nnz_sm[m], label=m)
-        
+            plt.plot(x_axis, nnz_sm[m], label=m)
     plt.legend(loc="upper right")
+    plt.xlabel("samples")
+    plt.ylabel("sampled_nnz_vs_original nnz")
     plt.savefig("./figures/nnzs/"+dataset_name+"_sparsity.pdf")
+    return None
+
+def plot_eigval_vs_nnzA(eigvals, nnzA, dataset_name):
+    plt.gcf().clear()
+    x_axis = list(range(len(eigvals)))
+    eigvals = np.sort(np.abs(eigvals))
+    plt.scatter(x_axis, eigvals)
+    plt.axhline(y=np.sqrt(nnzA), color="red")
+    plt.xlabel("eigval indices")
+    plt.ylabel("eigenvalues")
+    plt.savefig("./figures/eigvals/"+dataset_name+".pdf")
+    return None
+
