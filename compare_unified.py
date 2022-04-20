@@ -18,11 +18,11 @@ from copy import copy
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "erdos"
-# dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv"
+dataset_name = "tridiagonal"
+# dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_10", "sparsity sampler_0.1", "sparsity sampler_0.01", "sparsity sampler_1"]
+sampling_modes = ["sparsity sampler_10"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 

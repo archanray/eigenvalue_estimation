@@ -417,5 +417,18 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
         B = v @ np.diag(w_half)
 
         return B
-    
+
+    if name == "tridiagonal":
+        """
+        matrix for zeros in the main diagonal and 1s in the 1st off-diagonal
+        """
+        from scipy.sparse import diags
+        dataset_size = 5000
+        diagonals = [list(np.zeros(dataset_size)), list(np.ones(dataset_size-1)), list(np.ones(dataset_size-1))]
+        A = diags(diagonals, [0, -1, 1]).toarray()
+
+        min_sample_size = 10
+        max_sample_size = dataset_size
+
+        return A, dataset_size, min_sample_size, max_sample_size
 
