@@ -22,7 +22,7 @@ dataset_name = "tridiagonal"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["sparsity sampler_1"]
+sampling_modes = ["row nnz sample", "sparsity sampler_1"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 
@@ -74,7 +74,7 @@ if any(i for i in sampling_modes if "sparsity sampler" in i):
     tracked_errors[nom] = []
     tracked_percentile1[nom] = []
     tracked_percentile2[nom] = []
-    len_samples = len(tracked_errors["uniform random sample"])
+    len_samples = len(tracked_errors[sampling_modes[0]])
     vals = np.array(abs(chosen_eig) / np.sqrt(np.count_nonzero(true_mat)))
     vals = vals+1e-16
     for i in range(len_samples):
