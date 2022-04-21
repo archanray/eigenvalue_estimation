@@ -1,9 +1,9 @@
-This is the code repository for our paper on Sublinear Time Eigenvalue Approximation via Random Sampling.
+This is the code repository for our paper on [Sublinear Time Eigenvalue Approximation via Random Sampling](https://arxiv.org/pdf/2109.07647.pdf).
 
 TODO: 
 1. create a package for python using our methods and publish here.
 
-### Required Python packages and dependencies
+### Required Python libraries and dependencies
 
 We experimented in this version and do not expect this to fail in another version of python 3, but still do not guarantee stability in other versions of python packages.
 
@@ -15,6 +15,7 @@ We experimented in this version and do not expect this to fail in another versio
 6. Networkx (2.5)
 7. Matplotlib (3.3.2)
 8. Pickle (4.0)
+9. idx2numpy
 
 ### Running instructions
 
@@ -45,3 +46,7 @@ Most datasets in the paper are synthetic. There are however two real world graph
 Please copy these files in a folder named `data` for our code to run without error. Otherwise modify the file `get_dataset.py` to use the path to your dataset. 
 
 We hope this README has exhaustive literature to guide you in our projects. For any questions or queries feel free to reach out to us over email.
+
+### Citation
+
+If you want to cite our paper please check google scholar.

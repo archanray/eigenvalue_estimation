@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+title: Sublinear Time Eigenvalue Approximation via Random Sampling
+authors:
+  - family-names: Ray
+    given-names: Archan
+    orcid: "https://orcid.org/0000-0002-8507-2454"
+  - family-names: Bhattacharjee
+    given-names: Rajarshi
+  - family-names: Musco
+    given-names: Cameron
+version: 0.1
+date-released: "2022-04-21"
+license: MIT
+repository-code: "https://github.com/archanray/eigenvalue_estimation"
