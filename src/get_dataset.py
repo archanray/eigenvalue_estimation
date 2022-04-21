@@ -427,7 +427,7 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
         diagonals = [list(np.zeros(dataset_size)), list(np.ones(dataset_size-1)), list(np.ones(dataset_size-1))]
         A = diags(diagonals, [0, -1, 1]).toarray()
 
-        min_sample_size = 10
+        min_sample_size = 50
         max_sample_size = dataset_size
 
         return A, dataset_size, min_sample_size, max_sample_size

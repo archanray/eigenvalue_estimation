@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
     """
@@ -38,7 +39,7 @@ def sample_eig_default(data_matrix, s, scale=False, \
     chosen_p = norm[sample_indices]
     
     subsample_matrix = data_matrix[sample_indices][:, sample_indices]
-    
+
     sqrt_chosen_p = np.sqrt(chosen_p*s)
     D = np.diag(1 / sqrt_chosen_p)
     subsample_matrix = D @ subsample_matrix @ D        
@@ -50,7 +51,10 @@ def sample_eig_default(data_matrix, s, scale=False, \
         mask = (pipj >= 1/(s*multiplier*nnzA)).astype(int) # assuming s \geq tilde{O}(1/epsilon**2)
         subsample_matrix = subsample_matrix*mask
         nnz_subsample_matrix = np.count_nonzero(subsample_matrix)
-        nnz_subsample_matrix = (nnz_subsample_matrix) / float(original_nnzs)
+        try:
+            nnz_subsample_matrix = (nnz_subsample_matrix) / float(original_nnzs)
+        except:
+            nnz_subsample_matrix = 0
     
     # useful for only hermitian matrices
     all_eig_val_estimates = np.real(np.linalg.eigvalsh(subsample_matrix))

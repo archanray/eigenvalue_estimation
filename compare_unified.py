@@ -22,7 +22,7 @@ dataset_name = "tridiagonal"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
 name_adder = "nnz_sparse_multi"
 # name_adder = "random"
-sampling_modes = ["sparsity sampler_10"]
+sampling_modes = ["sparsity sampler_1"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 
