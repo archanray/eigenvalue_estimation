@@ -82,6 +82,11 @@ if any(i for i in sampling_modes if "sparsity sampler" in i):
         tracked_percentile1[nom].append(vals)
         tracked_percentile2[nom].append(vals)
 
+with open("pickle_files/"+dataset_name+"_"+name_adder+".pkl", "wb") as f:
+    pickle.dump([tracked_errors, tracked_percentile1, tracked_percentile2, sampling_modes, dataset_name, dataset_size, \
+            search_rank, max_samples, min_samples, \
+            true_spectrum, name_adder], f)
+
 # visualize the errors
 plot_all_errors(tracked_errors, tracked_percentile1, tracked_percentile2, \
             sampling_modes, dataset_name, dataset_size, \
