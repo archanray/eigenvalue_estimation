@@ -226,7 +226,7 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     from matplotlib.ticker import FormatStrFormatter
     from matplotlib.ticker import MaxNLocator, MultipleLocator
 
-    size_of_fonts = 14
+    size_of_fonts = 13
 
     np.set_printoptions(precision=0)
     x_axis = np.array(list(range(min_samples, max_samples, 10))) / dataset_size
@@ -254,7 +254,7 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     if len(sampling_modes) == 1:
         pass
     else:
-        plt.legend(sampling_modes, fontsize=5)
+        plt.legend(sampling_modes, fontsize=size_of_fonts)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
     if dataset_name == "block" and search_rank == -1:
