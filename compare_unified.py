@@ -18,7 +18,7 @@ from copy import copy
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "erdos"
+dataset_name = "arxiv"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
 name_adder = "uniform_nnz_sparse"
 # name_adder = "random"
