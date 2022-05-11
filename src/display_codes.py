@@ -15,7 +15,7 @@ def rename_sampling_modes(sampling_modes):
         if sampling_modes[i] == "row nnz sample":
             sampling_modes1[i] = "simple sparsity sampler"
         if sampling_modes[i] == "lambda_by_nnz":
-            sampling_modes1[i] = "lambda by nnz"
+            sampling_modes1[i] = "approximation by 0"
         if sampling_modes[i] == "sparsity sampler_0.1":
             sampling_modes1[i] = "sparsity sampler 0.1"
         if sampling_modes[i] == "uniform random sample":
