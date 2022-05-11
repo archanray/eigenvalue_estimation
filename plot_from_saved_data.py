@@ -1,7 +1,7 @@
 import pickle
 from src.viz import plot_all_errors, plot_all_nnz
 
-dataset_name = "arxiv"
+dataset_name = "erdos"
 name_adder = "uniform_nnz_sparse"
 
 with open("pickle_files/"+dataset_name+"_"+name_adder+".pkl", "rb") as f:

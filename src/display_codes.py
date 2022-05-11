@@ -6,6 +6,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+def rename_sampling_modes(sampling_modes):
+    """
+    just use for the final figures not general
+    """
+    sampling_modes1 = [0,0,0,0]
+    for i in range(len(sampling_modes)):
+        if sampling_modes[i] == "row nnz sample":
+            sampling_modes1[i] = "simple sparsity sampler"
+        if sampling_modes[i] == "lambda_by_nnz":
+            sampling_modes1[i] = "lambda by nnz"
+        if sampling_modes[i] == "sparsity sampler_0.1":
+            sampling_modes1[i] = "sparsity sampler 0.1"
+        if sampling_modes[i] == "uniform random sample":
+            sampling_modes1[i] = sampling_modes[i]
+    return sampling_modes1
+
+
 def disply_prob_histogram(norm, dataset_name):
     np.set_printoptions(precision=2)
     plt.hist(norm, density=False, bins=30)
@@ -242,19 +259,28 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     
     plt.rcParams.update({'font.size': 13})
     number_of_plots = len(sampling_modes)
-    colormap = plt.cm.nipy_spectral
+    # colormap = plt.cm.nipy_spectral
     # colors = [colormap(i) for i in np.linspace(0, 1,number_of_plots)]
     # print(colors)
     # ax.set_prop_cycle('color', colors)
+    # colors = ["#069AF3", "#C79FEF", "#008000", "#DC143C"]
+    colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
     
+    count = 0
     for m in sampling_modes:
-        plt.plot(x_axis, np.log(error[m]), label="log of average scaled absolute error", alpha=1.0)
-        plt.fill_between(x_axis, np.log(percentile1[m]), np.log(percentile2[m]), alpha=0.2)
+        plt.plot(x_axis, np.log(error[m]), \
+            label="log of average scaled absolute error", alpha=1.0, color=colors[count])
+        plt.fill_between(x_axis, np.log(percentile1[m]), \
+            np.log(percentile2[m]), alpha=0.2, color=colors[count])
         plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
+        count+= 1
+
     if len(sampling_modes) == 1:
         pass
     else:
-        plt.legend(sampling_modes, fontsize=size_of_fonts)
+        # the following line for final only
+        sampling_modes1 = rename_sampling_modes(sampling_modes)
+        plt.legend(sampling_modes1, fontsize=size_of_fonts)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
     if dataset_name == "block" and search_rank == -1:
