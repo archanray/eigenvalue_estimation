@@ -18,11 +18,11 @@ from copy import copy
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "arxiv"
+dataset_name = "block"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
-name_adder = "uniform_nnz_sparse"
+name_adder = "uniform"
 # name_adder = "random"
-sampling_modes = ["uniform random sample", "row nnz sample", "sparsity sampler_0.1"]
+sampling_modes = ["uniform random sample"]
 
 if dataset_name == "kong":
     similarity_measure = "tps" # "tps", "ht", 
@@ -68,19 +68,24 @@ print("chosen eigs:", chosen_eig)
 tracked_errors, tracked_percentile1, tracked_percentile2, nnz_sm = approximator(\
             sampling_modes, min_samples, max_samples, trials, true_mat, search_rank, chosen_eig)
 
+# set up baseline
 if any(i for i in sampling_modes if "sparsity sampler" in i):
-    nom = "lambda_by_nnz"
-    sampling_modes.append(nom)
-    tracked_errors[nom] = []
-    tracked_percentile1[nom] = []
-    tracked_percentile2[nom] = []
-    len_samples = len(tracked_errors[sampling_modes[0]])
-    vals = np.array(abs(chosen_eig) / np.sqrt(np.count_nonzero(true_mat)))
-    vals = vals+1e-16
-    for i in range(len_samples):
-        tracked_errors[nom].append(vals)
-        tracked_percentile1[nom].append(vals)
-        tracked_percentile2[nom].append(vals)
+    divisor = np.sqrt(np.count_nonzero(true_mat))
+else:
+    divisor = len(true_mat)
+
+nom = "lambda_by_nnz"
+sampling_modes.append(nom)
+tracked_errors[nom] = []
+tracked_percentile1[nom] = []
+tracked_percentile2[nom] = []
+len_samples = len(tracked_errors[sampling_modes[0]])
+vals = np.array(abs(chosen_eig) / divisor)
+vals = vals+1e-60 # adding this for stability in computing logarithm even when observing lambda_i = 0
+for i in range(len_samples):
+    tracked_errors[nom].append(vals)
+    tracked_percentile1[nom].append(vals)
+    tracked_percentile2[nom].append(vals)
 
 with open("pickle_files/"+dataset_name+"_"+name_adder+".pkl", "wb") as f:
     pickle.dump([tracked_errors, tracked_percentile1, tracked_percentile2, sampling_modes, dataset_name, dataset_size, \

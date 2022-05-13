@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def rename_sampling_modes(sampling_modes):
+def sparse_rename_sampling_modes(sampling_modes):
     """
     just use for the final figures not general
     """
@@ -22,6 +22,17 @@ def rename_sampling_modes(sampling_modes):
             sampling_modes1[i] = sampling_modes[i]
     return sampling_modes1
 
+def dense_rename_sampling_modes(sampling_modes):
+    """
+    just use for the final figures not general
+    """
+    sampling_modes1 = [0,0]
+    for i in range(len(sampling_modes)):
+        if sampling_modes[i] == "lambda_by_nnz":
+            sampling_modes1[i] = "approximation by 0"
+        if sampling_modes[i] == "uniform random sample":
+            sampling_modes1[i] = sampling_modes[i]
+    return sampling_modes1
 
 def disply_prob_histogram(norm, dataset_name):
     np.set_printoptions(precision=2)
@@ -264,7 +275,8 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     # print(colors)
     # ax.set_prop_cycle('color', colors)
     # colors = ["#069AF3", "#C79FEF", "#008000", "#DC143C"]
-    colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
+    colors = ["#069AF3", "#DC143C"]
+    # colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
     
     count = 0
     for m in sampling_modes:
@@ -278,13 +290,17 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     if len(sampling_modes) == 1:
         pass
     else:
-        # the following line for final only
-        sampling_modes1 = rename_sampling_modes(sampling_modes)
+        # the following line for final dense matrices only
+        sampling_modes1 = dense_rename_sampling_modes(sampling_modes)
+
+        # # the following line for final sparse matrices only
+        # sampling_modes1 = sparse_rename_sampling_modes(sampling_modes)
+
         plt.legend(sampling_modes1, fontsize=size_of_fonts)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
-    if dataset_name == "block" and search_rank == -1:
-        plt.ylim(-6.0, -2.5)
+    # if dataset_name == "block" and search_rank == -1:
+    #     plt.ylim(-6.0, -2.5)
     # plt.legend(loc="upper right")
     
     # title of the file
