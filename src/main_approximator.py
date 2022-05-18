@@ -23,9 +23,10 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                                 np.count_nonzero(true_mat, keepdims=False)
     #if "sparsity sampler" in sampling_modes:
     #    nnzA = np.count_nonzero(true_mat)
-    if any(i for i in sampling_modes if 'sparsity sampler' in i):
-        nnzA = np.count_nonzero(true_mat)
-        print("nnzA:", nnzA)
+    # if any(i for i in sampling_modes if 'sparsity sampler' in i):
+    #     nnzA = np.count_nonzero(true_mat)
+    #     print("nnzA:", nnzA)
+    nnzA = np.count_nonzero(true_mat)
 
     # create more loggers
     for m in sampling_modes:
@@ -76,8 +77,10 @@ def approximator(sampling_modes, min_samples, max_samples, trials, \
                     # nnz_subsample_matrtix = op[-1]
                 # get error this round
                 if "uniform random sample" in m and len(sampling_modes) == 1:
+                    # error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
+                    #                 float(dataset_size)
                     error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
-                                    float(dataset_size)
+                                    float(np.sqrt(nnzA))
                 else:
                     error_single_round = np.abs(min_eig_single_round - chosen_eig) / \
                                     float(np.sqrt(nnzA))

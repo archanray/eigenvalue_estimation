@@ -145,7 +145,7 @@ def get_data(name, eps=0.1, plot_mat=True, raise_eps=False):
         import networkx as nx
         if name == "erdos":
             from networkx.generators.random_graphs import erdos_renyi_graph
-            g = erdos_renyi_graph(5000, p=0.7)
+            g = erdos_renyi_graph(5000, p=0.1)
         else:
             g = nx.read_edgelist(data_file,create_using=nx.DiGraph(), nodetype = int)
         A = nx.adjacency_matrix(g)

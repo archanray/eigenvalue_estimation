@@ -18,14 +18,15 @@ from copy import copy
 # Parameters
 trials = 50
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "block"
+dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
 name_adder = "uniform"
 # name_adder = "random"
+# sampling modes options "row nnz sample", "uniform random sample", "sparsity sampler_0.1" can change the float here
 sampling_modes = ["uniform random sample"]
 
 if dataset_name == "kong":
-    similarity_measure = "tps" # "tps", "ht", 
+    similarity_measure = "ht" # "tps", "ht", 
 
 # Get the dataset
 if dataset_name == "kong":

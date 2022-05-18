@@ -267,15 +267,17 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
         ax.yaxis.set_major_locator(MultipleLocator(0.2))
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     ax.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    # ax.locator_params(axis='y', nbins=6)
     
     plt.rcParams.update({'font.size': 13})
     number_of_plots = len(sampling_modes)
-    # colormap = plt.cm.nipy_spectral
+
+    colormap = plt.cm.nipy_spectral
     # colors = [colormap(i) for i in np.linspace(0, 1,number_of_plots)]
     # print(colors)
     # ax.set_prop_cycle('color', colors)
     # colors = ["#069AF3", "#C79FEF", "#008000", "#DC143C"]
-    colors = ["#069AF3", "#DC143C"]
+    # colors = ["#069AF3", "#DC143C"]
     # colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
     
     count = 0
@@ -290,14 +292,18 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     if len(sampling_modes) == 1:
         pass
     else:
-        # the following line for final dense matrices only
-        sampling_modes1 = dense_rename_sampling_modes(sampling_modes)
+        # # the following line for final dense matrices only
+        # sampling_modes1 = dense_rename_sampling_modes(sampling_modes)
 
         # # the following line for final sparse matrices only
         # sampling_modes1 = sparse_rename_sampling_modes(sampling_modes)
 
+        # otherwise set to the following
+        sampling_modes1 = sampling_modes
+
         plt.legend(sampling_modes1, fontsize=size_of_fonts)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
+
 
     # if dataset_name == "block" and search_rank == -1:
     #     plt.ylim(-6.0, -2.5)
