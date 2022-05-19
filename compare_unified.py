@@ -16,14 +16,14 @@ from src.similarities import hyperbolic_tangent, thin_plane_spline
 from copy import copy
 
 # Parameters
-trials = 50
+trials = 10
 search_rank = [0,1,2,3,-4,-3,-2,-1]
 dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
-name_adder = "uniform"
+name_adder = "test"
 # name_adder = "random"
 # sampling modes options "row nnz sample", "uniform random sample", "sparsity sampler_0.1" can change the float here
-sampling_modes = ["uniform random sample"]
+sampling_modes = ["sparsity sampler_0.1"]
 
 if dataset_name == "kong":
     similarity_measure = "ht" # "tps", "ht", 

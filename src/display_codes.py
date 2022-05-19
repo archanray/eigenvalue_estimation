@@ -272,12 +272,12 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     plt.rcParams.update({'font.size': 13})
     number_of_plots = len(sampling_modes)
 
-    colormap = plt.cm.nipy_spectral
+    # colormap = plt.cm.nipy_spectral
     # colors = [colormap(i) for i in np.linspace(0, 1,number_of_plots)]
     # print(colors)
     # ax.set_prop_cycle('color', colors)
     # colors = ["#069AF3", "#C79FEF", "#008000", "#DC143C"]
-    # colors = ["#069AF3", "#DC143C"]
+    colors = ["#069AF3", "#DC143C"]
     # colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
     
     count = 0
