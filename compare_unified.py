@@ -23,7 +23,7 @@ b = list(range(0,20))
 search_rank = b+a
 dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
-name_adder = "test"
+name_adder = "random_nnz_sparse"
 # name_adder = "random"
 # sampling modes options "row nnz sample", "uniform random sample", "sparsity sampler_0.1" can change the float here
 sampling_modes = ["row nnz sample", "uniform random sample", "sparsity sampler_0.1"]

@@ -281,8 +281,8 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     # print(colors)
     # ax.set_prop_cycle('color', colors)
     # colors = ["#069AF3", "#C79FEF", "#008000", "#DC143C"]
-    colors = ["#069AF3", "#DC143C"]
-    # colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
+    # colors = ["#069AF3", "#DC143C"]
+    colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
     
     count = 0
     for m in sampling_modes:
@@ -328,5 +328,6 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     #plt.show()
     # uncomment to download file
     plt.savefig(filename)
+    plt.close("all")
     
     return None
