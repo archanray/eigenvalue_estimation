@@ -17,13 +17,16 @@ from copy import copy
 
 # Parameters
 trials = 10
-search_rank = [0,1,2,3,-4,-3,-2,-1]
+#search_rank = [0,1,2,3,-4,-3,-2,-1]
+a = list(range(-20,0))
+b = list(range(0,20))
+search_rank = b+a
 dataset_name = "facebook"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
 name_adder = "test"
 # name_adder = "random"
 # sampling modes options "row nnz sample", "uniform random sample", "sparsity sampler_0.1" can change the float here
-sampling_modes = ["sparsity sampler_0.1"]
+sampling_modes = ["row nnz sample", "uniform random sample", "sparsity sampler_0.1"]
 
 if dataset_name == "kong":
     similarity_measure = "ht" # "tps", "ht", 

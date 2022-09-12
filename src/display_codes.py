@@ -93,6 +93,10 @@ def convert_rank_to_order(search_rank):
         rank_name = "third largest"
     if search_rank == -4:
         rank_name = "fourth largest"
+    if search_rank >=4:
+        rank_name = str(search_rank-1)+"th smallest"
+    if search_rank <= -5:
+        rank_name = str(abs(search_rank))+"th largest"
 
     return rank_name
 
