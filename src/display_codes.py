@@ -27,11 +27,13 @@ def dense_rename_sampling_modes(sampling_modes):
     just use for the final figures not general
     """
     sampling_modes1 = [0,0]
+    # print("FIRST", sampling_modes)
     for i in range(len(sampling_modes)):
         if sampling_modes[i] == "lambda_by_nnz":
             sampling_modes1[i] = "approximation by 0"
         if sampling_modes[i] == "uniform random sample":
             sampling_modes1[i] = sampling_modes[i]
+    # print("SECOND", sampling_modes1)
     return sampling_modes1
 
 def disply_prob_histogram(norm, dataset_name):
@@ -281,15 +283,22 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     # print(colors)
     # ax.set_prop_cycle('color', colors)
     # colors = ["#069AF3", "#C79FEF", "#008000", "#DC143C"]
-    # colors = ["#069AF3", "#DC143C"]
-    colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
+    colors = ["#069AF3", "#DC143C"]
+    # colors = ["#069AF3", "#FFA500", "#008000", "#DC143C"]
+    
+    # only for dense
+    sampling_modes1 = dense_rename_sampling_modes(sampling_modes)
+    # only for sparse 
+    # sampling_modes1 = sparse_rename_sampling_modes(sampling_modes)
     
     count = 0
-    for m in sampling_modes:
-        plt.plot(x_axis, np.log(error[m]), \
-            label="log of average scaled absolute error", alpha=1.0, color=colors[count])
-        plt.fill_between(x_axis, np.log(percentile1[m]), \
-            np.log(percentile2[m]), alpha=0.2, color=colors[count])
+    for i in range(len(sampling_modes)):
+        m1 = sampling_modes[i]
+        m2 = sampling_modes1[i]
+        plt.plot(x_axis, np.log(error[m1]), \
+            label=m2, alpha=1.0, color=colors[count])
+        plt.fill_between(x_axis, np.log(percentile1[m1]), \
+            np.log(percentile2[m1]), alpha=0.2, color=colors[count])
         plt.ylabel("Log of average scaled absolute error", fontsize=size_of_fonts)
         count+= 1
 
@@ -298,19 +307,21 @@ def display_combined_error(sampling_modes, dataset_name, error, dataset_size, \
     else:
         # # the following line for final dense matrices only
         # sampling_modes1 = dense_rename_sampling_modes(sampling_modes)
+        # print(sampling_modes1)
 
         # # the following line for final sparse matrices only
         # sampling_modes1 = sparse_rename_sampling_modes(sampling_modes)
 
         # otherwise set to the following
-        sampling_modes1 = sampling_modes
+        # sampling_modes1 = sampling_modes
 
-        plt.legend(sampling_modes1, fontsize=size_of_fonts)
+        # plt.legend(sampling_modes1, fontsize=size_of_fonts)
+        plt.legend(fontsize=size_of_fonts)
     plt.xlabel("Log sampling rate", fontsize=size_of_fonts)
 
 
-    # if dataset_name == "block" and search_rank == -1:
-    #     plt.ylim(-6.0, -2.5)
+    if dataset_name == "block" and search_rank == -1:
+        plt.ylim(-5.5, -0.5)
     # plt.legend(loc="upper right")
     
     # title of the file

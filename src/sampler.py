@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 
 def sample_eig(data, s, similarity_measure, scale=False, rankcheck=0):
     """
@@ -34,6 +35,8 @@ def sample_eig_default(data_matrix, s, scale=False, \
     n = len(data_matrix)
     list_of_available_indices = range(n)
 
+    if len(norm) == 0:
+        norm = np.ones(n) / n
     sample_indices = np.sort(np.random.choice(list_of_available_indices, \
         size=s, replace=True, p=norm))
     chosen_p = norm[sample_indices]
@@ -61,7 +64,7 @@ def sample_eig_default(data_matrix, s, scale=False, \
     all_eig_val_estimates.sort()
 
     min_eig = np.array(all_eig_val_estimates)[rankcheck]
-    if scale == False or "CUR" in mode:
+    if scale == False or "CUR" in method:
         if "sparsity sampler" in method:
             return min_eig, nnz_subsample_matrix
         else:

@@ -21,12 +21,13 @@ trials = 10
 a = list(range(-20,0))
 b = list(range(0,20))
 search_rank = b+a
-dataset_name = "facebook"
+dataset_name = "block"
 # dataset_name = "erdos", "MNIST", "block", "facebook", "kong", "multi_block_outer", "arxiv", "tridiagonal"
-name_adder = "random_nnz_sparse"
+name_adder = "random"
 # name_adder = "random"
 # sampling modes options "row nnz sample", "uniform random sample", "sparsity sampler_0.1" can change the float here
-sampling_modes = ["row nnz sample", "uniform random sample", "sparsity sampler_0.1"]
+# sampling_modes = ["row nnz sample", "uniform random sample", "sparsity sampler_0.1"]
+sampling_modes = ["uniform random sample"]
 
 if dataset_name == "kong":
     similarity_measure = "ht" # "tps", "ht", 
@@ -79,13 +80,14 @@ else:
     divisor = len(true_mat)
 
 nom = "lambda_by_nnz"
+eps = 1e-40
 sampling_modes.append(nom)
 tracked_errors[nom] = []
 tracked_percentile1[nom] = []
 tracked_percentile2[nom] = []
 len_samples = len(tracked_errors[sampling_modes[0]])
 vals = np.array(abs(chosen_eig) / divisor)
-vals = vals+1e-60 # adding this for stability in computing logarithm even when observing lambda_i = 0
+vals = vals+eps # adding this for stability in computing logarithm even when observing lambda_i = 0
 for i in range(len_samples):
     tracked_errors[nom].append(vals)
     tracked_percentile1[nom].append(vals)
@@ -103,4 +105,4 @@ plot_all_errors(tracked_errors, tracked_percentile1, tracked_percentile2, \
             true_spectrum, name_adder)
 
 # visualize non-zeros elements in the submatrix of the sparsity sampler
-plot_all_nnz(nnz_sm, sampling_modes, dataset_name, min_samples, max_samples)
+# plot_all_nnz(nnz_sm, sampling_modes, dataset_name, min_samples, max_samples)

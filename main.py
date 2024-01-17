@@ -19,9 +19,9 @@ use scipy.sparse.linalg.eigs to compute k largest and smallest eigenvalues
 ###########################################PARAMETERS############################################
 # parameters
 trials = 50
-similarity_measure = "tps"#"tps", "ht" for kong, "default" for binary and random_sparse
+similarity_measure = "default"#"tps", "ht" for kong, "default" for binary and random_sparse
 search_rank = [0,1,2,3,-4,-3,-2,-1]
-dataset_name = "kong"
+dataset_name = "block"
 #"multi_block_outer" 
 #"multi_block_synthetic", "synthetic_tester", "binary", 
 #"kong", "asymmetric", "facebook", "arxiv", "block", "synthetic_tester"
